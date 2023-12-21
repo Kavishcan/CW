@@ -52,7 +52,7 @@ public class ShoppingGUI extends JFrame {
     public void layoutGUI(User user) {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.insets = new Insets(10, 10, 5, 10);
         constraints.gridwidth = 1;
 
         constraints.gridy = 0;
@@ -176,6 +176,10 @@ public class ShoppingGUI extends JFrame {
 
         constraints.gridwidth = 1;
 
+        constraints.anchor = GridBagConstraints.LAST_LINE_END;
+        constraints.insets = new Insets(10,10,10,175);
+        constraints.gridwidth = 2;
+        constraints.gridx = 1;
         constraints.gridy++;
         add(addToShoppingCart, constraints);
 
@@ -188,13 +192,8 @@ public class ShoppingGUI extends JFrame {
                     user.getShoppingCart().addToCart(product, 1);
                     productsTable.clearSelection();
                     JOptionPane.showMessageDialog(null, product.getProductName() + " added to the cart.");
-                    // setPreferredSize(new Dimension(489, 655));
-                    panel.setVisible(false);
                     product.setProductQty(product.getProductQty() - 1);
-                    
-
-                    // Create an instance of the Shopping Cart GUI and pass the selected product
-                    // shoppingCartGUI.setVisible(true);
+                    // updateShoppingCartView(); // Update the shopping cart view
                 }
                 pack();
             }
@@ -208,8 +207,8 @@ public class ShoppingGUI extends JFrame {
             Product product = products.get(i);
             data[i][0] = product.getProductId();
             data[i][1] = product.getProductName();
-            data[i][2] = product.getPrice();
-            data[i][3] = product.getClass().getName();
+            data[i][2] = product.getClass().getName();
+            data[i][3] = product.getPrice();
             if (product instanceof Electronics) {
                 data[i][4] = ((Electronics) product).getInfo();
             } else if (product instanceof Clothing) {

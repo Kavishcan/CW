@@ -116,7 +116,6 @@ public class LoginGUI extends JFrame {
                 signUpGUI();
             }
         });
-        
     }
 
     private void signUpGUI(){
@@ -238,6 +237,4 @@ public class LoginGUI extends JFrame {
         LoginGUI loginGUI = new LoginGUI();
         loginGUI.setVisible(true);
     }
-
-
 }

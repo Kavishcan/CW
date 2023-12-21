@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
-
-import java.util.ArrayList;
 import java.util.Map;
 
 public class ShoppingCartGUI extends JFrame {
@@ -42,6 +40,8 @@ public class ShoppingCartGUI extends JFrame {
         DefaultTableModel model = new DefaultTableModel(convertListToData(shoppingCart.getProducts()), columnNames);
         productsTable = new JTable(model);
         scrollPane = new JScrollPane(productsTable);
+        productsTable.setModel(model);
+
     }
 
 
@@ -55,7 +55,7 @@ public class ShoppingCartGUI extends JFrame {
         constraints.gridx = 0;
         add(scrollPane, constraints);
 
-        constraints.anchor = GridBagConstraints.LINE_END;
+        constraints.anchor = GridBagConstraints.CENTER;
 
         constraints.gridy++;
         add(totalLabel, constraints);
@@ -78,9 +78,9 @@ public class ShoppingCartGUI extends JFrame {
             user.getShoppingCart().getProducts().clear();
             
             // update users file
-            ArrayList<User> i = WestminsterShoppingManager.getUserList();
+            // ArrayList<User> i = WestminsterShoppingManager.getUserList();
             WestminsterShoppingManager.saveUsersToFile();
-            ArrayList<User> j = WestminsterShoppingManager.getUserList();
+            // ArrayList<User> j = WestminsterShoppingManager.getUserList();
             WestminsterShoppingManager.saveProductsToFile();
             this.dispose();
         });
@@ -91,7 +91,11 @@ public class ShoppingCartGUI extends JFrame {
         Object[][] data = new Object[map.size()][3];
         int i = 0;
         for (Product product : map.keySet()) {
-            data[i][0] = product.getProductName();
+            if (product instanceof Electronics) {
+                 data[i][0] = product.getProductId() + "  "+  product.getProductName() + "  " +((Electronics) product).getInfo();
+            } else if (product instanceof Clothing) {
+                data[i][0] = product.getProductId() + "  "+  product.getProductName() + "  " +((Clothing) product).getInfo();
+            }
             data[i][1] = map.get(product);
             data[i][2] = product.getPrice();
             i++;

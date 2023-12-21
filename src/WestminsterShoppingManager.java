@@ -113,18 +113,45 @@ public class WestminsterShoppingManager implements ShoppingManager {
         return totalCost;
     }
 
+    @Override
+    public void displayProducts() {
+    System.out.println("Products in the system:");
+    for (Product product : productList) {
+        System.out.println("----------------------------------------");
+        System.out.println("Product Name: " + product.getProductName());
+        System.out.println("Product ID: " + product.getProductId());
+        System.out.println("Price: $" + product.getPrice());
+        System.out.println("Quantity: " + product.getProductQty());
+        if (product instanceof Clothing) {
+            Clothing clothing = (Clothing) product;
+            System.out.println("Type: Clothing");
+            System.out.println("Size: " + clothing.getSize());
+            System.out.println("Color: " + clothing.getColour());
+        } else if (product instanceof Electronics) {
+            Electronics electronics = (Electronics) product;
+            System.out.println("Type: Electronics");
+            System.out.println("Brand: " + electronics.getBrand());
+            System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
+        }
+        System.out.println("----------------------------------------");
+    }
+}
+
 
     // Method to display the console menu
     public void displayMenu() {
         int choice;
         do {
-            System.out.println("\nMenu:");
-            System.out.println("1. Add a new product to the system");
-            System.out.println("2. Delete a product from the system");
-            System.out.println("3. Print the list of products in the system");
-            System.out.println("4. Save products to file");
-            System.out.println("5. Open GUI");
-            System.out.println("6. Exit");
+            System.out.println("--------------------------------------------------");
+            System.out.println("--------Westminster Shopping Manager Menu---------");
+            System.out.println("--------------------------------------------------");
+            System.out.println("1. Add a new product to the system ");
+            System.out.println("2. Delete a product from the system ");
+            System.out.println("3. Print the list of products in the system ");
+            System.out.println("4. Save products to file ");
+            System.out.println("5. Open GUI ");
+            System.out.println("6. Exit ");
+            System.out.println("--------------------------------------------------");
             System.out.print("Enter your choice: ");
 
             try {
@@ -269,28 +296,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         displayProducts();
     }
 
-    public void displayProducts() {
-    System.out.println("Products in the system:");
-    for (Product product : productList) {
-        System.out.println("----------------------------------------");
-        System.out.println("Product Name: " + product.getProductName());
-        System.out.println("Product ID: " + product.getProductId());
-        System.out.println("Price: $" + product.getPrice());
-        System.out.println("Quantity: " + product.getProductQty());
-        if (product instanceof Clothing) {
-            Clothing clothing = (Clothing) product;
-            System.out.println("Type: Clothing");
-            System.out.println("Size: " + clothing.getSize());
-            System.out.println("Color: " + clothing.getColour());
-        } else if (product instanceof Electronics) {
-            Electronics electronics = (Electronics) product;
-            System.out.println("Type: Electronics");
-            System.out.println("Brand: " + electronics.getBrand());
-            System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
-        }
-        System.out.println("----------------------------------------");
-    }
-}
+    
 
     // Method to save the list of products to a file
     static void saveProductsToFile() {
