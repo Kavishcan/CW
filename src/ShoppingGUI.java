@@ -27,7 +27,7 @@ public class ShoppingGUI extends JFrame {
 }
 
     public void initComponents() {
-        selectProductLabel = new JLabel("Select Product");
+        selectProductLabel = new JLabel("Select Product:");
         cartHeading = new JLabel("Selected Product - Details");
         cartProductId = new JLabel("Product Id");
         cartCategory = new JLabel("Category");
@@ -60,6 +60,14 @@ public class ShoppingGUI extends JFrame {
         add(selectProductLabel, constraints);
 
         constraints.gridx = 1;
+        add(viewShoppingCart, constraints);
+
+        viewShoppingCart.addActionListener(e -> {
+            new ShoppingCartGUI(user);
+        });
+
+        constraints.gridy++;
+        constraints.gridx = 0;
         add(productComboBox, constraints);
 
         // show the product combo box selected item in the table
@@ -87,9 +95,7 @@ public class ShoppingGUI extends JFrame {
             }
         });
 
-        constraints.gridy++;
-
-        constraints.gridx = 0;
+        constraints.gridx = 1;
         add(sortButton, constraints);
 
         sortButton.addActionListener(e -> {
@@ -98,12 +104,7 @@ public class ShoppingGUI extends JFrame {
             productsTable.setModel(new DefaultTableModel(convertListToData(products), new String[]{"Product Id", "Name","Category","Price","Info"}));
         });
 
-        constraints.gridx = 1;
-        add(viewShoppingCart, constraints);
-
-        viewShoppingCart.addActionListener(e -> {
-            new ShoppingCartGUI(user);
-        });
+        
 
         constraints.gridwidth = 2;
 

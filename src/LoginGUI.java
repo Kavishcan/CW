@@ -221,10 +221,7 @@ public class LoginGUI extends JFrame {
                 } catch (IllegalArgumentException error) {
                     JOptionPane.showMessageDialog(signUpGUI, error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-        
-            }
-
-            
+            }    
         });
 
         cancButton.addActionListener(new ActionListener(){
