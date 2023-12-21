@@ -26,18 +26,21 @@ public class WestminsterShoppingManager implements ShoppingManager {
         // Clothing clothing1 = new Clothing("C001", "T-Shirt", 10, 20.0, "M", "Red");
         // Clothing clothing2 = new Clothing("C002", "Jeans", 5, 50.0, "L", "Blue");
         // Clothing clothing3 = new Clothing("C003", "Shirt", 15, 30.0, "S", "White");
-        // Electronics electronics1 = new Electronics("E001", "Laptop", 10, 1000.0, "Dell", 12);
-        // Electronics electronics2 = new Electronics("E002", "Mobile Phone", 20, 500.0, "Samsung", 6);
-        // Electronics electronics3 = new Electronics("E003", "TV", 5, 2000.0, "Sony", 24);
+        // Electronics electronics1 = new Electronics("E001", "Laptop", 10, 1000.0,
+        // "Dell", 12);
+        // Electronics electronics2 = new Electronics("E002", "Mobile Phone", 20, 500.0,
+        // "Samsung", 6);
+        // Electronics electronics3 = new Electronics("E003", "TV", 5, 2000.0, "Sony",
+        // 24);
 
         // productList.add(clothing1);
         // productList.add(clothing2);
         // productList.add(clothing3);
         // productList.add(electronics1);
         // productList.add(electronics2);
-        // productList.add(electronics3);       
+        // productList.add(electronics3);
 
-        //WestminsterShoppingManager.userList = new ArrayList<>();
+        // WestminsterShoppingManager.userList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
         // Load products and users from file at application startup
         loadProductsFromFile();
@@ -68,22 +71,22 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 product = p;
                 break;
             }
-            
+
         }
         return product;
     }
-
 
     // Implementation of interface methods
     @Override
     public void addProduct(Product product) {
         for (Product existingProduct : productList) {
             if (existingProduct.getProductId().equals(product.getProductId())) {
-                System.out.println("Product with ID " + product.getProductId() + " already exists. Cannot add duplicate products.");
+                System.out.println("Product with ID " + product.getProductId()
+                        + " already exists. Cannot add duplicate products.");
                 return;
             }
         }
-    
+
         if (productList.size() < MAX_PRODUCTS) {
             productList.add(product);
             System.out.println(product.getProductName() + " added to the system.");
@@ -115,28 +118,27 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     @Override
     public void displayProducts() {
-    System.out.println("Products in the system:");
-    for (Product product : productList) {
-        System.out.println("----------------------------------------");
-        System.out.println("Product Name: " + product.getProductName());
-        System.out.println("Product ID: " + product.getProductId());
-        System.out.println("Price: $" + product.getPrice());
-        System.out.println("Quantity: " + product.getProductQty());
-        if (product instanceof Clothing) {
-            Clothing clothing = (Clothing) product;
-            System.out.println("Type: Clothing");
-            System.out.println("Size: " + clothing.getSize());
-            System.out.println("Color: " + clothing.getColour());
-        } else if (product instanceof Electronics) {
-            Electronics electronics = (Electronics) product;
-            System.out.println("Type: Electronics");
-            System.out.println("Brand: " + electronics.getBrand());
-            System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
+        System.out.println("Products in the system:");
+        for (Product product : productList) {
+            System.out.println("----------------------------------------");
+            System.out.println("Product Name: " + product.getProductName());
+            System.out.println("Product ID: " + product.getProductId());
+            System.out.println("Price: $" + product.getPrice());
+            System.out.println("Quantity: " + product.getProductQty());
+            if (product instanceof Clothing) {
+                Clothing clothing = (Clothing) product;
+                System.out.println("Type: Clothing");
+                System.out.println("Size: " + clothing.getSize());
+                System.out.println("Color: " + clothing.getColour());
+            } else if (product instanceof Electronics) {
+                Electronics electronics = (Electronics) product;
+                System.out.println("Type: Electronics");
+                System.out.println("Brand: " + electronics.getBrand());
+                System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
+            }
+            System.out.println("----------------------------------------");
         }
-        System.out.println("----------------------------------------");
     }
-}
-
 
     // Method to display the console menu
     public void displayMenu() {
@@ -281,22 +283,20 @@ public class WestminsterShoppingManager implements ShoppingManager {
             // Remove the product from the system
             removeProduct(productToDelete);
 
-            // Display information about the deleted product and the total number of products left
+            // Display information about the deleted product and the total number of
+            // products left
             System.out.println(productType + " with ID " + productIdToDelete + " has been deleted from the system.");
             System.out.println("Total number of products left in the system: " + productList.size());
         } else {
-        System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
+            System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
         }
     }
-
 
     // Method to print the list of products alphabetically by product ID
     private void printProductList() {
         Collections.sort(productList, Comparator.comparing(Product::getProductId));
         displayProducts();
     }
-
-    
 
     // Method to save the list of products to a file
     static void saveProductsToFile() {
@@ -347,13 +347,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-
     // Method to open the GUI
     private void openGUI() {
         // Create an instance of ShoppingGUI
         new LoginGUI();
     }
-
-
 
 }

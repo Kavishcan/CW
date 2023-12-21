@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class User implements Serializable {
     private String username;
     private String password;
     private String email;
@@ -37,17 +37,17 @@ public class User implements Serializable{
         if (!username.matches("[a-zA-Z]+")) {
             throw new IllegalArgumentException("Username can only contain alphabet letters");
         }
-    
-        for(User user : WestminsterShoppingManager.getUserList()) {
+
+        for (User user : WestminsterShoppingManager.getUserList()) {
             if (user.getUsername().equals(username) && user != this) {
                 throw new IllegalArgumentException("Username already exists");
             } else if (user.getUsername().equals(username) && user == this) {
                 continue;
             }
         }
-        this.username = username;   
+        this.username = username;
     }
-    
+
     public String getPassword() {
         return password;
     }
@@ -99,13 +99,12 @@ public class User implements Serializable{
         return age;
     }
 
-
     public void setAge(int age) {
-    if (age <= 17 || age >= 100) {
-        throw new IllegalArgumentException("Age must be a positive number and between 18 and 100");
+        if (age <= 17 || age >= 100) {
+            throw new IllegalArgumentException("Age must be a positive number and between 18 and 100");
+        }
+        this.age = age;
     }
-    this.age = age;
-}
 
     public String getGender() {
         return gender;

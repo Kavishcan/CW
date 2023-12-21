@@ -3,7 +3,7 @@ import java.util.List;
 
 public class ProductTableModel extends AbstractTableModel {
     private List<Product> products;
-    private final String[] columnNames = {"Product ID", "Product Name", "Quantity", "Price"};
+    private final String[] columnNames = { "Product ID", "Product Name", "Quantity", "Price" };
 
     public ProductTableModel(List<Product> products) {
         this.products = products;
@@ -35,7 +35,6 @@ public class ProductTableModel extends AbstractTableModel {
                 return null;
         }
     }
-
 
     @Override
     public String getColumnName(int column) {

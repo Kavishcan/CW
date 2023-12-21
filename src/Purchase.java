@@ -10,9 +10,9 @@ public class Purchase {
     public Integer getPurchaseId() {
         return purchaseId;
     }
-    
+
     public ShoppingCart getShoppingCart() {
         return shoppingCart;
     }
-    
+
 }

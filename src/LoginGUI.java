@@ -13,24 +13,26 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class LoginGUI extends JFrame {
-    
-    private JTextField usernameField, firstNameField, lastNamField, genderField, ageField, signUpUserNameField, signUpEmailField;
-    private JLabel welcomLabel ,usernameLabel, passwordLabel,firstNameLabel, lastNameLabel, genderLabel, ageLabel, signUpUserNameLabel, signUpPasswordLabel, signUpConfirmPasswordLabel,  signUpEmailLabel; 
-    private JButton loginButton, signUpButton, cancButton, createButton;
-    private JPasswordField loginPasswordField,signUpPasswordField, signUpConfirmPasswordField;
 
-    public LoginGUI(){
+    private JTextField usernameField, firstNameField, lastNamField, genderField, ageField, signUpUserNameField,
+            signUpEmailField;
+    private JLabel welcomLabel, usernameLabel, passwordLabel, firstNameLabel, lastNameLabel, genderLabel, ageLabel,
+            signUpUserNameLabel, signUpPasswordLabel, signUpConfirmPasswordLabel, signUpEmailLabel;
+    private JButton loginButton, signUpButton, cancButton, createButton;
+    private JPasswordField loginPasswordField, signUpPasswordField, signUpConfirmPasswordField;
+
+    public LoginGUI() {
         setTitle("Westminster Shopping Login Page");
         setLayout(new GridBagLayout());
         initComponents();
         layoutGUI();
-        pack(); 
+        pack();
         WestminsterShoppingManager wsm = new WestminsterShoppingManager();
         setVisible(true);
 
     }
 
-    private void initComponents(){
+    private void initComponents() {
         usernameField = new JTextField(20);
         firstNameField = new JTextField(20);
         lastNamField = new JTextField(20);
@@ -59,14 +61,14 @@ public class LoginGUI extends JFrame {
 
     }
 
-    private void layoutGUI(){
+    private void layoutGUI() {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.insets.set(10, 10, 10, 10);
-        
+
         add(welcomLabel, constraints);
 
         constraints.gridwidth = 1;
@@ -101,24 +103,26 @@ public class LoginGUI extends JFrame {
                 if (user != null) {
                     WestminsterShoppingManager.setCurrentUser(user);
                     User currentUser = WestminsterShoppingManager.getCurrentUser();
-                    JOptionPane.showMessageDialog(LoginGUI.this, "Login successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-                        new ShoppingGUI(currentUser);
-                    
+                    JOptionPane.showMessageDialog(LoginGUI.this, "Login successful", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    new ShoppingGUI(currentUser);
+
                 } else {
-                    JOptionPane.showMessageDialog(LoginGUI.this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(LoginGUI.this, "Invalid username or password", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        signUpButton.addActionListener(new ActionListener(){
+        signUpButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 signUpGUI();
             }
         });
     }
 
-    private void signUpGUI(){
+    private void signUpGUI() {
         JDialog signUpGUI = new JDialog(this, "Sign Up", true);
         signUpGUI.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -189,9 +193,9 @@ public class LoginGUI extends JFrame {
         constraints.gridx = 1;
         signUpGUI.add(createButton, constraints);
 
-        createButton.addActionListener(new ActionListener(){
+        createButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 User user = new User();
                 try {
                     user.setUsername(signUpUserNameField.getText());
@@ -203,12 +207,13 @@ public class LoginGUI extends JFrame {
                     user.setGender(genderField.getText());
 
                     WestminsterShoppingManager.getUserList().add(user);
-                    ArrayList <User> userList = WestminsterShoppingManager.getUserList();
+                    ArrayList<User> userList = WestminsterShoppingManager.getUserList();
                     System.out.println(userList);
                     // for (User use : userList) {
-                    //     System.out.println(use.getUsername());
+                    // System.out.println(use.getUsername());
                     // }
-                    JOptionPane.showMessageDialog(signUpGUI, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(signUpGUI, "Account created successfully", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                     WestminsterShoppingManager.saveUsersToFile();
                     signUpGUI.setVisible(false);
                     signUpGUI.dispose();
@@ -216,12 +221,12 @@ public class LoginGUI extends JFrame {
                 } catch (IllegalArgumentException error) {
                     JOptionPane.showMessageDialog(signUpGUI, error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }    
+            }
         });
 
-        cancButton.addActionListener(new ActionListener(){
+        cancButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 signUpGUI.setVisible(false);
                 signUpGUI.dispose();
             }
