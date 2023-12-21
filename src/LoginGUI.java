@@ -108,7 +108,6 @@ public class LoginGUI extends JFrame {
                     JOptionPane.showMessageDialog(LoginGUI.this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            
         });
 
         signUpButton.addActionListener(new ActionListener(){
@@ -207,9 +206,9 @@ public class LoginGUI extends JFrame {
                     WestminsterShoppingManager.getUserList().add(user);
                     ArrayList <User> userList = WestminsterShoppingManager.getUserList();
                     System.out.println(userList);
-                    for (User use : userList) {
-                        System.out.println(use.getUsername());
-                    }
+                    // for (User use : userList) {
+                    //     System.out.println(use.getUsername());
+                    // }
                     JOptionPane.showMessageDialog(signUpGUI, "Account created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                     WestminsterShoppingManager.saveUsersToFile();
                     signUpGUI.setVisible(false);

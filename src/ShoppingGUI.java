@@ -116,7 +116,7 @@ public class ShoppingGUI extends JFrame {
         productsTable.addMouseListener(new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent e) {
-            setPreferredSize(new Dimension(489, 831));
+            // setPreferredSize(new Dimension(489, 831));
             super.mouseClicked(e);
             int row = productsTable.getSelectedRow();
             if (row >= 0) {
@@ -188,8 +188,7 @@ public class ShoppingGUI extends JFrame {
                     user.getShoppingCart().addToCart(product, 1);
                     productsTable.clearSelection();
                     JOptionPane.showMessageDialog(null, product.getProductName() + " added to the cart.");
-                    setPreferredSize(new Dimension(489, 655));
-                    pack();
+                    // setPreferredSize(new Dimension(489, 655));
                     panel.setVisible(false);
                     product.setProductQty(product.getProductQty() - 1);
                     
@@ -197,6 +196,7 @@ public class ShoppingGUI extends JFrame {
                     // Create an instance of the Shopping Cart GUI and pass the selected product
                     // shoppingCartGUI.setVisible(true);
                 }
+                pack();
             }
         });
 

@@ -52,6 +52,27 @@ public class WestminsterShoppingManager implements ShoppingManager {
         return productList;
     }
 
+    public static User getUser(String username, String password) {
+        for (User user : userList) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static Product getProduct(String productId) {
+        Product product = null;
+        for (Product p : productList) {
+            if (p.getProductId().equals(productId)) {
+                product = p;
+                break;
+            }
+            
+        }
+        return product;
+    }
+
 
     // Implementation of interface methods
     @Override
@@ -93,28 +114,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
 
-public void displayProducts() {
-    System.out.println("Products in the system:");
-    for (Product product : productList) {
-        System.out.println("----------------------------------------");
-        System.out.println("Product Name: " + product.getProductName());
-        System.out.println("Product ID: " + product.getProductId());
-        System.out.println("Price: $" + product.getPrice());
-        System.out.println("Quantity: " + product.getProductQty());
-        if (product instanceof Clothing) {
-            Clothing clothing = (Clothing) product;
-            System.out.println("Type: Clothing");
-            System.out.println("Size: " + clothing.getSize());
-            System.out.println("Color: " + clothing.getColour());
-        } else if (product instanceof Electronics) {
-            Electronics electronics = (Electronics) product;
-            System.out.println("Type: Electronics");
-            System.out.println("Brand: " + electronics.getBrand());
-            System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
-        }
-        System.out.println("----------------------------------------");
-    }
-}
     // Method to display the console menu
     public void displayMenu() {
         int choice;
@@ -172,22 +171,12 @@ public void displayProducts() {
             int productType = scanner.nextInt();
             scanner.nextLine(); // Consume the newline character
 
-            System.out.print("Enter product ID: ");
-            String productId = scanner.nextLine();
-            System.out.print("Enter product name: ");
-            String productName = scanner.nextLine();
-            System.out.print("Enter price: ");
-            double price = scanner.nextDouble();
-            System.out.println("Enter product quantity: ");
-            int productQty = scanner.nextInt();
-            scanner.nextLine(); // clear the scanner
-
             switch (productType) {
                 case 1:
-                    addElectronics(productId, productName, productQty, price);
+                    addElectronics();
                     break;
                 case 2:
-                    addClothing(productId, productName, productQty, price);
+                    addClothing();
                     break;
                 default:
                     System.out.println("Invalid choice. Returning to the main menu.");
@@ -198,8 +187,16 @@ public void displayProducts() {
         }
     }
 
-    private void addElectronics(String productId, String productName, int productQty, double price) {
+    private void addElectronics() {
         try {
+            System.out.print("Enter product ID: ");
+            String productId = scanner.nextLine();
+            System.out.print("Enter product name: ");
+            String productName = scanner.nextLine();
+            System.out.print("Enter price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter product quantity: ");
+            int productQty = scanner.nextInt();
             System.out.print("Enter brand: ");
             String brand = scanner.nextLine();
             System.out.print("Enter warranty period (in months): ");
@@ -213,8 +210,16 @@ public void displayProducts() {
         }
     }
 
-    private void addClothing(String productId, String productName, int productQty, double price) {
+    private void addClothing() {
         try {
+            System.out.print("Enter product ID: ");
+            String productId = scanner.nextLine();
+            System.out.print("Enter product name: ");
+            String productName = scanner.nextLine();
+            System.out.print("Enter price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter product quantity: ");
+            int productQty = scanner.nextInt();
             System.out.print("Enter size: ");
             String size = scanner.nextLine();
             System.out.print("Enter color: ");
@@ -228,34 +233,34 @@ public void displayProducts() {
         }
     }
 
-// Method to delete a product from the system based on user input
-private void deleteProduct() {
-    System.out.print("\nEnter the product ID to delete: ");
-    String productIdToDelete = scanner.nextLine();
+    // Method to delete a product from the system based on user input
+    private void deleteProduct() {
+        System.out.print("\nEnter the product ID to delete: ");
+        String productIdToDelete = scanner.nextLine();
 
-    // Find the product with the given ID
-    Product productToDelete = null;
-    for (Product product : productList) {
-        if (product.getProductId().equals(productIdToDelete)) {
-            productToDelete = product;
-            break;
+        // Find the product with the given ID
+        Product productToDelete = null;
+        for (Product product : productList) {
+            if (product.getProductId().equals(productIdToDelete)) {
+                productToDelete = product;
+                break;
+            }
+        }
+
+        if (productToDelete != null) {
+            // Determine if the product is electronics or clothing
+            String productType = (productToDelete instanceof Electronics) ? "Electronics" : "Clothing";
+
+            // Remove the product from the system
+            removeProduct(productToDelete);
+
+            // Display information about the deleted product and the total number of products left
+            System.out.println(productType + " with ID " + productIdToDelete + " has been deleted from the system.");
+            System.out.println("Total number of products left in the system: " + productList.size());
+        } else {
+        System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
         }
     }
-
-    if (productToDelete != null) {
-        // Determine if the product is electronics or clothing
-        String productType = (productToDelete instanceof Electronics) ? "Electronics" : "Clothing";
-
-        // Remove the product from the system
-        removeProduct(productToDelete);
-
-        // Display information about the deleted product and the total number of products left
-        System.out.println(productType + " with ID " + productIdToDelete + " has been deleted from the system.");
-        System.out.println("Total number of products left in the system: " + productList.size());
-    } else {
-        System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
-    }
-}
 
 
     // Method to print the list of products alphabetically by product ID
@@ -263,6 +268,29 @@ private void deleteProduct() {
         Collections.sort(productList, Comparator.comparing(Product::getProductId));
         displayProducts();
     }
+
+    public void displayProducts() {
+    System.out.println("Products in the system:");
+    for (Product product : productList) {
+        System.out.println("----------------------------------------");
+        System.out.println("Product Name: " + product.getProductName());
+        System.out.println("Product ID: " + product.getProductId());
+        System.out.println("Price: $" + product.getPrice());
+        System.out.println("Quantity: " + product.getProductQty());
+        if (product instanceof Clothing) {
+            Clothing clothing = (Clothing) product;
+            System.out.println("Type: Clothing");
+            System.out.println("Size: " + clothing.getSize());
+            System.out.println("Color: " + clothing.getColour());
+        } else if (product instanceof Electronics) {
+            Electronics electronics = (Electronics) product;
+            System.out.println("Type: Electronics");
+            System.out.println("Brand: " + electronics.getBrand());
+            System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
+        }
+        System.out.println("----------------------------------------");
+    }
+}
 
     // Method to save the list of products to a file
     static void saveProductsToFile() {
@@ -288,6 +316,7 @@ private void deleteProduct() {
         }
     }
 
+    // Method to save the list of user to a file
     static void saveUsersToFile() {
         ArrayList<User> userList = WestminsterShoppingManager.getUserList();
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("users.txt"))) {
@@ -319,32 +348,6 @@ private void deleteProduct() {
         new LoginGUI();
     }
 
-    public static User getUser(String username, String password) {
-        for (User user : userList) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                return user;
-            }
-        }
-        return null;
-    }
 
-    public static Product getProduct(String productId) {
-        Product product = null;
-        for (Product p : productList) {
-            if (p.getProductId().equals(productId)) {
-                product = p;
-                break;
-            }
-            
-        }
-        return product;
-    }
-
-    public static void updateProduct(Product product) {
-        
-    }
-
-    public static void addProductToCart(Product product, int qty) {
-    }
 
 }

@@ -101,7 +101,7 @@ public class User implements Serializable{
 
 
     public void setAge(int age) {
-    if (age <= 18 || age >= 100) {
+    if (age <= 17 || age >= 100) {
         throw new IllegalArgumentException("Age must be a positive number and between 18 and 100");
     }
     this.age = age;
