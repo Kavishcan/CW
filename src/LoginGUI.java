@@ -10,9 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class LoginGUI extends JFrame {
@@ -24,10 +21,10 @@ public class LoginGUI extends JFrame {
 
     public LoginGUI(){
         setTitle("Westminster Shopping Login Page");
-        setSize(500, 500);
         setLayout(new GridBagLayout());
         initComponents();
         layoutGUI();
+        pack(); 
         WestminsterShoppingManager wsm = new WestminsterShoppingManager();
         setVisible(true);
 
@@ -42,16 +39,16 @@ public class LoginGUI extends JFrame {
         signUpUserNameField = new JTextField(20);
         signUpEmailField = new JTextField(20);
         welcomLabel = new JLabel("Welcome to Westminster Shopping");
-        usernameLabel = new JLabel("Username");
-        passwordLabel = new JLabel("Password");
-        firstNameLabel = new JLabel("First Name");
-        lastNameLabel = new JLabel("Last Name");
-        genderLabel = new JLabel("Gender");
-        ageLabel = new JLabel("Age");
-        signUpUserNameLabel = new JLabel("Username");
-        signUpPasswordLabel = new JLabel("Password");
-        signUpConfirmPasswordLabel = new JLabel("Confirm Password");
-        signUpEmailLabel = new JLabel("Email");
+        usernameLabel = new JLabel("Username:");
+        passwordLabel = new JLabel("Password:");
+        firstNameLabel = new JLabel("First Name:");
+        lastNameLabel = new JLabel("Last Name:");
+        genderLabel = new JLabel("Gender:");
+        ageLabel = new JLabel("Age:");
+        signUpUserNameLabel = new JLabel("Username:");
+        signUpPasswordLabel = new JLabel("Password:");
+        signUpConfirmPasswordLabel = new JLabel("Confirm Password:");
+        signUpEmailLabel = new JLabel("Email:");
         loginButton = new JButton("Login");
         signUpButton = new JButton("Sign Up");
         cancButton = new JButton("Cancel");

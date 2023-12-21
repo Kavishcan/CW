@@ -39,7 +39,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
         //WestminsterShoppingManager.userList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
-        // Load products from file at application startup
+        // Load products and users from file at application startup
         loadProductsFromFile();
         loadUsersFromFile();
     }
