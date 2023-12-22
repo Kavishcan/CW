@@ -13,8 +13,6 @@ public class ShoppingGUI extends JFrame {
     private JScrollPane scrollPane;
     private JPanel panel;
 
-    WestminsterShoppingManager wsm = new WestminsterShoppingManager();
-
     public ShoppingGUI(User user) {
         setTitle("Westminster Shopping Login Page");
 
@@ -126,6 +124,13 @@ public class ShoppingGUI extends JFrame {
                     Product product = WestminsterShoppingManager.getProduct(productId);
                     panel.setVisible(true);
                     pack();
+
+                    if (product.getProductQty() == 0) {
+                        addToShoppingCart.setEnabled(false);
+                    } else {
+                        addToShoppingCart.setEnabled(true);
+                    }
+
                     if (product != null) {
 
                         cartProductId.setText("Product Id: " + product.getProductId());
@@ -195,6 +200,11 @@ public class ShoppingGUI extends JFrame {
                     product.setProductQty(product.getProductQty() - 1);
                     panel.setVisible(false);
                     // updateShoppingCartView(); // Update the shopping cart view
+
+                    ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
+                    if (ShoppingCartGUI != null) {
+                        ShoppingCartGUI.updateCart(user);
+                    }
                 }
                 pack();
             }

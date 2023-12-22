@@ -4,7 +4,5 @@ public interface ShoppingManager {
 
     void removeProduct(Product product);
 
-    double calculateTotalCost();
-
     void displayProducts();
 }

@@ -27,7 +27,6 @@ public class LoginGUI extends JFrame {
         initComponents();
         layoutGUI();
         pack();
-        WestminsterShoppingManager wsm = new WestminsterShoppingManager();
         setVisible(true);
 
     }

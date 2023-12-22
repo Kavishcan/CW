@@ -79,14 +79,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     // Implementation of interface methods
     @Override
     public void addProduct(Product product) {
-        for (Product existingProduct : productList) {
-            if (existingProduct.getProductId().equals(product.getProductId())) {
-                System.out.println("Product with ID " + product.getProductId()
-                        + " already exists. Cannot add duplicate products.");
-                return;
-            }
-        }
-
         if (productList.size() < MAX_PRODUCTS) {
             productList.add(product);
             System.out.println(product.getProductName() + " added to the system.");
@@ -105,15 +97,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
         } else {
             System.out.println("Product not found in the system.");
         }
-    }
-
-    @Override
-    public double calculateTotalCost() {
-        double totalCost = 0.0;
-        for (Product product : productList) {
-            totalCost += product.getPrice();
-        }
-        return totalCost;
     }
 
     @Override
@@ -216,49 +199,70 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-    private void addElectronics() {
-        try {
-            System.out.print("Enter product ID: ");
-            String productId = scanner.nextLine();
-            System.out.print("Enter product name: ");
-            String productName = scanner.nextLine();
-            System.out.print("Enter price: ");
-            double price = scanner.nextDouble();
-            System.out.print("Enter product quantity: ");
-            int productQty = scanner.nextInt();
-            System.out.print("Enter brand: ");
-            String brand = scanner.nextLine();
-            System.out.print("Enter warranty period (in months): ");
-            int warrantyPeriod = scanner.nextInt();
+    private String generateProductId(String productType) {
+        String productId = "";
+        if (productType.equals("Electronics")) {
+            productId = "E" + String.format("%03d", productList.size() + 1);
+        } else if (productType.equals("Clothing")) {
+            productId = "C" + String.format("%03d", productList.size() + 1);
+        }
+        return productId;
+    }
 
-            Electronics electronics = new Electronics(productId, productName, productQty, price, brand, warrantyPeriod);
-            addProduct(electronics);
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter the correct type for each field.");
-            scanner.nextLine(); // clear the scanner
+    private void addElectronics() {
+
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                String productId = generateProductId("Electronics");
+                System.out.print("Enter product name: ");
+                String productName = scanner.nextLine();
+                System.out.print("Enter price: ");
+                double price = scanner.nextDouble();
+                System.out.print("Enter product quantity: ");
+                int productQty = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                System.out.print("Enter brand: ");
+                String brand = scanner.nextLine();
+                System.out.print("Enter warranty period (in months): ");
+                int warrantyPeriod = scanner.nextInt();
+
+                Electronics electronics = new Electronics(productId, productName, productQty, price, brand,
+                        warrantyPeriod);
+                addProduct(electronics);
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter the correct type for each field.");
+                scanner.nextLine(); // clear the scanner
+            }
         }
     }
 
     private void addClothing() {
-        try {
-            System.out.print("Enter product ID: ");
-            String productId = scanner.nextLine();
-            System.out.print("Enter product name: ");
-            String productName = scanner.nextLine();
-            System.out.print("Enter price: ");
-            double price = scanner.nextDouble();
-            System.out.print("Enter product quantity: ");
-            int productQty = scanner.nextInt();
-            System.out.print("Enter size: ");
-            String size = scanner.nextLine();
-            System.out.print("Enter color: ");
-            String color = scanner.nextLine();
 
-            Clothing clothing = new Clothing(productId, productName, productQty, price, size, color);
-            addProduct(clothing);
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter the correct type for each field.");
-            scanner.nextLine(); // clear the scanner
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                String productId = generateProductId("Clothing");
+                System.out.print("Enter product name: ");
+                String productName = scanner.nextLine();
+                System.out.print("Enter price: ");
+                double price = scanner.nextDouble();
+                System.out.print("Enter product quantity: ");
+                int productQty = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+                System.out.print("Enter size: ");
+                String sizes = scanner.nextLine();
+                System.out.print("Enter color: ");
+                String color = scanner.nextLine();
+
+                Clothing clothing = new Clothing(productId, productName, productQty, price, sizes, color);
+                addProduct(clothing);
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter the correct type for each field.");
+                scanner.nextLine(); // clear the scanner
+            }
         }
     }
 

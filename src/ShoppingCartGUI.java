@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ShoppingCartGUI extends JFrame {
@@ -22,21 +24,20 @@ public class ShoppingCartGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    public void initComponents(User user){
+    public void initComponents(User user) {
 
         Double total = user.getShoppingCart().calculateTotalCost();
         Double discount1 = user.getShoppingCart().firstPurchaseDiscount(user);
         Double discount2 = user.getShoppingCart().categoryDiscount();
 
-        
         totalLabel = new JLabel("Total: " + total);
-        discount1Label = new JLabel("First Purchase Discount(10%): - "+ discount1);
-        discount2Label = new JLabel("Three items in same category Discount(20%):  - "+ discount2);
-        finalTotalLabel = new JLabel("Final Total: "+ (total - discount1 - discount2));
+        discount1Label = new JLabel("First Purchase Discount(10%): - " + discount1);
+        discount2Label = new JLabel("Three items in same category Discount(20%):  - " + discount2);
+        finalTotalLabel = new JLabel("Final Total: " + (total - discount1 - discount2));
         checkoutButton = new JButton("Checkout");
 
-        Map<Product, Integer> shoppingItems =  user.getShoppingCart().getProducts();
-        String[] columnNames = {"Product", "Quantity", "Price"};
+        Map<Product, Integer> shoppingItems = user.getShoppingCart().getProducts();
+        String[] columnNames = { "Product", "Quantity", "Price" };
         DefaultTableModel model = new DefaultTableModel(convertListToData(shoppingCart.getProducts()), columnNames);
         productsTable = new JTable(model);
         scrollPane = new JScrollPane(productsTable);
@@ -44,8 +45,7 @@ public class ShoppingCartGUI extends JFrame {
 
     }
 
-
-    public void layoutGUI(User user){
+    public void layoutGUI(User user) {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.insets = new Insets(10, 10, 10, 10);
@@ -63,7 +63,6 @@ public class ShoppingCartGUI extends JFrame {
         constraints.gridy++;
         add(discount1Label, constraints);
 
-
         constraints.gridy++;
         add(discount2Label, constraints);
 
@@ -76,7 +75,7 @@ public class ShoppingCartGUI extends JFrame {
         checkoutButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(null, "Checkout Successful");
             user.getShoppingCart().getProducts().clear();
-            
+
             // update users file
             // ArrayList<User> i = WestminsterShoppingManager.getUserList();
             WestminsterShoppingManager.saveUsersToFile();
@@ -92,15 +91,27 @@ public class ShoppingCartGUI extends JFrame {
         int i = 0;
         for (Product product : map.keySet()) {
             if (product instanceof Electronics) {
-                 data[i][0] = product.getProductId() + "  "+  product.getProductName() + "  " +((Electronics) product).getInfo();
+                data[i][0] = product.getProductId() + "  " + product.getProductName() + "  "
+                        + ((Electronics) product).getInfo();
             } else if (product instanceof Clothing) {
-                data[i][0] = product.getProductId() + "  "+  product.getProductName() + "  " +((Clothing) product).getInfo();
+                data[i][0] = product.getProductId() + "  " + product.getProductName() + "  "
+                        + ((Clothing) product).getInfo();
             }
             data[i][1] = map.get(product);
             data[i][2] = product.getPrice();
             i++;
         }
         return data;
+    }
+
+    public void updateCart(User user) {
+        Map<Product, Integer> ShoppintItems = new LinkedHashMap<>();
+        ShoppintItems = user.getShoppingCart().getProducts();
+        DefaultTableModel model = (DefaultTableModel) productsTable.getModel();
+        model.setDataVector(convertListToData(ShoppintItems), new String[] { "Product", "Quantity", "Price" });
+        model.fireTableDataChanged();
+        productsTable.setModel(model);
+
     }
 
     public static void main(String[] args) {
