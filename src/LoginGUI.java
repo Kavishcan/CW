@@ -105,6 +105,7 @@ public class LoginGUI extends JFrame {
                     JOptionPane.showMessageDialog(LoginGUI.this, "Login successful", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
                     new ShoppingGUI(currentUser);
+                    dispose();
 
                 } else {
                     JOptionPane.showMessageDialog(LoginGUI.this, "Invalid username or password", "Error",

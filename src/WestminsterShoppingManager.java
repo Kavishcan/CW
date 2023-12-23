@@ -173,7 +173,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 scanner.nextLine(); // clear the scanner
                 choice = 0; // reset choice
             }
-        } while (choice != 6);
+        } while (choice != 7);
     }
 
     // Method to add a new product to the system based on user input

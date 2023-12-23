@@ -21,6 +21,8 @@ public class ShoppingGUI extends JFrame {
         layoutGUI(user);
         setVisible(true);
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         pack();
         setLocationRelativeTo(null);
     }
