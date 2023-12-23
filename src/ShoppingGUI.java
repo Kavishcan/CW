@@ -7,7 +7,7 @@ public class ShoppingGUI extends JFrame {
 
     private JLabel selectProductLabel, cartHeading, cartProductId, cartCategory, cartName, cartSpeical1, cartSpecial2,
             cartQty;
-    private JButton addToShoppingCart, viewShoppingCart, sortButton;
+    private JButton addToShoppingCart, viewShoppingCart, sortButton, logOutButton;
     private JComboBox productComboBox;
     private JTable productsTable;
     private JScrollPane scrollPane;
@@ -39,6 +39,7 @@ public class ShoppingGUI extends JFrame {
         addToShoppingCart = new JButton("Add to Shopping Cart");
         viewShoppingCart = new JButton("View Shopping Cart");
         sortButton = new JButton("Sort");
+        logOutButton = new JButton("Log Out");
         productComboBox = new JComboBox<>(new String[] { "All", "Electronics", "Clothing" });
 
         String[] columnNames = { "Product Id", "Name", "Category", "Price", "Info" };
@@ -58,7 +59,12 @@ public class ShoppingGUI extends JFrame {
 
         constraints.gridy = 0;
         constraints.gridx = 0;
-        add(selectProductLabel, constraints);
+        add(logOutButton, constraints);
+
+        logOutButton.addActionListener(e -> {
+            dispose();
+            new LoginGUI();
+        });
 
         constraints.gridx = 1;
         add(viewShoppingCart, constraints);
@@ -69,6 +75,9 @@ public class ShoppingGUI extends JFrame {
 
         constraints.gridy++;
         constraints.gridx = 0;
+        add(selectProductLabel, constraints);
+
+        constraints.gridx = 1;
         add(productComboBox, constraints);
 
         // show the product combo box selected item in the table
@@ -99,6 +108,7 @@ public class ShoppingGUI extends JFrame {
             }
         });
 
+        constraints.gridy++;
         constraints.gridx = 1;
         add(sortButton, constraints);
 
