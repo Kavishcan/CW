@@ -7,44 +7,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
     private static ArrayList<Product> productList;
     private static ArrayList<User> userList;
     private static User currentUser;
-
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User user) {
-        currentUser = user;
-    }
-
     private Scanner scanner;
 
     // Constructor
     public WestminsterShoppingManager() {
         WestminsterShoppingManager.productList = new ArrayList<>();
         WestminsterShoppingManager.userList = new ArrayList<>();
-
-        // Clothing clothing1 = new Clothing("C001", "T-Shirt", 10, 20.0, "M", "Red");
-        // Clothing clothing2 = new Clothing("C002", "Jeans", 5, 50.0, "L", "Blue");
-        // Clothing clothing3 = new Clothing("C003", "Shirt", 15, 30.0, "S", "White");
-        // Electronics electronics1 = new Electronics("E001", "Laptop", 10, 1000.0,
-        // "Dell", 12);
-        // Electronics electronics2 = new Electronics("E002", "Mobile Phone", 20, 500.0,
-        // "Samsung", 6);
-        // Electronics electronics3 = new Electronics("E003", "TV", 5, 2000.0, "Sony",
-        // 24);
-
-        // productList.add(clothing1);
-        // productList.add(clothing2);
-        // productList.add(clothing3);
-        // productList.add(electronics1);
-        // productList.add(electronics2);
-        // productList.add(electronics3);
-
-        // WestminsterShoppingManager.userList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
-        // Load products and users from file at application startup
-        loadProductsFromFile();
         loadUsersFromFile();
+        loadFromFile();
     }
 
     public static ArrayList<User> getUserList() {
@@ -93,7 +64,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println(product.getProductName() + " removed from the system.");
             System.out.println("Total number of products left in the system: " + productList.size());
             // Save products to file after each removal
-            saveProductsToFile();
+            // saveProductsToFile();
+            saveToFile();
         } else {
             System.out.println("Product not found in the system.");
         }
@@ -123,6 +95,33 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    @Override
+    public void saveToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("products.txt"))) {
+            oos.writeObject(productList);
+            System.out.println("Products saved to file successfully.");
+        } catch (IOException e) {
+            System.out.println("Error saving products to file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void loadFromFile() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("products.txt"))) {
+            Object obj = ois.readObject();
+            if (obj != null && obj instanceof List) {
+                productList = (ArrayList<Product>) obj;
+                System.out.println("Products loaded from file successfully.");
+            } else {
+                productList = new ArrayList<>(); // Initialize productList if obj is null
+                System.out.println("No products found in file.");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading products from file: " + e.getMessage());
+        }
+    }
+
     // Method to display the console menu
     public void displayMenu() {
         int choice;
@@ -133,9 +132,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println("1. Add a new product to the system ");
             System.out.println("2. Delete a product from the system ");
             System.out.println("3. Print the list of products in the system ");
-            System.out.println("4. Save products to file ");
-            System.out.println("5. Open GUI ");
-            System.out.println("6. Exit ");
+            System.out.println("4. Update the quantity of a product ");
+            System.out.println("5. Save products to file ");
+            System.out.println("6. Open GUI ");
+            System.out.println("7. Exit ");
             System.out.println("--------------------------------------------------");
             System.out.print("Enter your choice: ");
 
@@ -154,12 +154,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
                         printProductList();
                         break;
                     case 4:
-                        saveProductsToFile();
+                        updateProductQty();
                         break;
                     case 5:
-                        openGUI();
+                        saveToFile();
                         break;
                     case 6:
+                        openGUI();
+                        break;
+                    case 7:
                         System.out.println("Exiting the system manager.");
                         break;
                     default:
@@ -302,6 +305,27 @@ public class WestminsterShoppingManager implements ShoppingManager {
         displayProducts();
     }
 
+    // Method to update the items quantity with the productID
+    private void updateProductQty() {
+        System.out.print("\nEnter the product ID to update: ");
+        String productIdToUpdate = scanner.nextLine();
+        boolean productFound = false;
+        for (Product product : productList) {
+            if (product.getProductId().equals(productIdToUpdate)) {
+                System.out.print("Enter the new quantity: ");
+                int newQty = scanner.nextInt();
+                product.setProductQty(newQty);
+                System.out.println("Product with ID " + productIdToUpdate + " has been updated.");
+                productFound = true;
+                saveToFile();
+                break;
+            }
+        }
+        if (!productFound) {
+            System.out.println("Product with ID " + productIdToUpdate + " not found in the system.");
+        }
+    }
+
     // Method to save the list of products to a file
     static void saveProductsToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("products.txt"))) {
@@ -309,20 +333,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println("Products saved to file successfully.");
         } catch (IOException e) {
             System.out.println("Error saving products to file: " + e.getMessage());
-        }
-    }
-
-    // Method to load the list of products from a file at application startup
-    @SuppressWarnings("unchecked")
-    private void loadProductsFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("products.txt"))) {
-            Object obj = ois.readObject();
-            if (obj instanceof List) {
-                productList = (ArrayList<Product>) obj;
-                System.out.println("Products loaded from file successfully.");
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error loading products from file: " + e.getMessage());
         }
     }
 
@@ -353,8 +363,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     // Method to open the GUI
     private void openGUI() {
-        // Create an instance of ShoppingGUI
+        // Create an instance of LoginGUI
         new LoginGUI();
     }
 
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
 }

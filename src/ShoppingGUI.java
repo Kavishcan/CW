@@ -188,6 +188,8 @@ public class ShoppingGUI extends JFrame {
         constraints.gridy++;
         add(addToShoppingCart, constraints);
 
+        ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
+
         addToShoppingCart.addActionListener(e -> {
             int row = productsTable.getSelectedRow();
             if (row >= 0) {
@@ -201,7 +203,6 @@ public class ShoppingGUI extends JFrame {
                     panel.setVisible(false);
                     // updateShoppingCartView(); // Update the shopping cart view
 
-                    ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
                     if (ShoppingCartGUI != null) {
                         ShoppingCartGUI.updateCart(user);
                     }
@@ -209,7 +210,6 @@ public class ShoppingGUI extends JFrame {
                 pack();
             }
         });
-
     }
 
     private Object[][] convertListToData(ArrayList<Product> products) {

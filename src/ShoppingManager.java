@@ -5,4 +5,9 @@ public interface ShoppingManager {
     void removeProduct(Product product);
 
     void displayProducts();
+
+    void saveToFile();
+
+    void loadFromFile();
+
 }

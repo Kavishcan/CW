@@ -82,4 +82,5 @@ public class ShoppingCart implements Serializable {
     public Map<Product, Integer> getProducts() {
         return this.products;
     }
+
 }

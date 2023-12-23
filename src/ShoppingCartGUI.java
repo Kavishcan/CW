@@ -36,7 +36,6 @@ public class ShoppingCartGUI extends JFrame {
         finalTotalLabel = new JLabel("Final Total: " + (total - discount1 - discount2));
         checkoutButton = new JButton("Checkout");
 
-        Map<Product, Integer> shoppingItems = user.getShoppingCart().getProducts();
         String[] columnNames = { "Product", "Quantity", "Price" };
         DefaultTableModel model = new DefaultTableModel(convertListToData(shoppingCart.getProducts()), columnNames);
         productsTable = new JTable(model);
@@ -77,9 +76,8 @@ public class ShoppingCartGUI extends JFrame {
             user.getShoppingCart().getProducts().clear();
 
             // update users file
-            // ArrayList<User> i = WestminsterShoppingManager.getUserList();
             WestminsterShoppingManager.saveUsersToFile();
-            // ArrayList<User> j = WestminsterShoppingManager.getUserList();
+            // update the products file
             WestminsterShoppingManager.saveProductsToFile();
             this.dispose();
         });
