@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class ShoppingGUI extends JFrame {
@@ -128,12 +130,12 @@ public class ShoppingGUI extends JFrame {
         productsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                // setPreferredSize(new Dimension(489, 831));
                 super.mouseClicked(e);
                 int row = productsTable.getSelectedRow();
                 if (row >= 0) {
                     String productId = (String) productsTable.getValueAt(row, 0);
                     Product product = WestminsterShoppingManager.getProduct(productId);
+
                     panel.setVisible(true);
                     pack();
 
@@ -158,6 +160,22 @@ public class ShoppingGUI extends JFrame {
                         cartQty.setText("Quantity: " + product.getProductQty());
                     }
                 }
+            }
+        });
+
+        productsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                String productId = (String) table.getValueAt(row, 0);
+                Product product = WestminsterShoppingManager.getProduct(productId);
+                if (product != null && product.getProductQty() <= 3) {
+                    c.setForeground(Color.RED);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+                return c;
             }
         });
 
@@ -200,8 +218,6 @@ public class ShoppingGUI extends JFrame {
         constraints.gridy++;
         add(addToShoppingCart, constraints);
 
-        ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
-
         addToShoppingCart.addActionListener(e -> {
             int row = productsTable.getSelectedRow();
             if (row >= 0) {
@@ -213,8 +229,9 @@ public class ShoppingGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, product.getProductName() + " added to the cart.");
                     product.setProductQty(product.getProductQty() - 1);
                     panel.setVisible(false);
-                    // updateShoppingCartView(); // Update the shopping cart view
 
+                    ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
+                    ShoppingCartGUI.setVisible(false);
                     if (ShoppingCartGUI != null) {
                         ShoppingCartGUI.updateCart(user);
                     }
@@ -240,10 +257,4 @@ public class ShoppingGUI extends JFrame {
         }
         return data;
     }
-
-    public static void main(String[] args) {
-        ShoppingGUI shoppingGUI = new ShoppingGUI(new User());
-        shoppingGUI.setVisible(true);
-    }
-
 }

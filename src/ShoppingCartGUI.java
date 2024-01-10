@@ -41,7 +41,6 @@ public class ShoppingCartGUI extends JFrame {
         productsTable = new JTable(model);
         scrollPane = new JScrollPane(productsTable);
         productsTable.setModel(model);
-
     }
 
     public void layoutGUI(User user) {
@@ -81,7 +80,6 @@ public class ShoppingCartGUI extends JFrame {
             WestminsterShoppingManager.saveProductsToFile();
             this.dispose();
         });
-
     }
 
     private Object[][] convertListToData(Map<Product, Integer> map) {
@@ -103,17 +101,12 @@ public class ShoppingCartGUI extends JFrame {
     }
 
     public void updateCart(User user) {
-        Map<Product, Integer> ShoppintItems = new LinkedHashMap<>();
-        ShoppintItems = user.getShoppingCart().getProducts();
+        Map<Product, Integer> ShoppingtItems = new LinkedHashMap<>();
+        ShoppingtItems = user.getShoppingCart().getProducts();
         DefaultTableModel model = (DefaultTableModel) productsTable.getModel();
-        model.setDataVector(convertListToData(ShoppintItems), new String[] { "Product", "Quantity", "Price" });
+        model.setDataVector(convertListToData(ShoppingtItems), new String[] { "Product", "Quantity", "Price" });
         model.fireTableDataChanged();
         productsTable.setModel(model);
-
     }
 
-    public static void main(String[] args) {
-        ShoppingCartGUI shoppingGUI = new ShoppingCartGUI(new User());
-        shoppingGUI.setVisible(true);
-    }
 }

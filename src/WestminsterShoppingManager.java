@@ -42,7 +42,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 product = p;
                 break;
             }
-
         }
         return product;
     }
@@ -59,20 +58,45 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
     @Override
-    public void removeProduct(Product product) {
-        if (productList.remove(product)) {
-            System.out.println(product.getProductName() + " removed from the system.");
+    public void removeProduct() {
+        System.out.print("\nEnter the product ID to delete: ");
+        String productIdToDelete = scanner.nextLine();
+
+        // Find the product with the given ID
+        Product productToDelete = null;
+        for (Product product : productList) {
+            if (product.getProductId().equals(productIdToDelete)) {
+                productToDelete = product;
+                break;
+            }
+        }
+
+        if (productToDelete != null) {
+            // Determine if the product is electronics or clothing
+            String productType = (productToDelete instanceof Electronics) ? "Electronics" : "Clothing";
+
+            // Remove the product from the system
+            if (productList.remove(productToDelete)) {
+                System.out.println(productToDelete.getProductName() + " removed from the system.");
+                System.out.println("Total number of products left in the system: " + productList.size());
+                // Save products to file after each removal
+                saveToFile();
+            } else {
+                System.out.println("Product not found in the system.");
+            }
+
+            // Display information about the deleted product and the total number of
+            // products left
+            System.out.println(productType + " with ID " + productIdToDelete + " has been deleted from the system.");
             System.out.println("Total number of products left in the system: " + productList.size());
-            // Save products to file after each removal
-            // saveProductsToFile();
-            saveToFile();
         } else {
-            System.out.println("Product not found in the system.");
+            System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
         }
     }
 
     @Override
     public void displayProducts() {
+        Collections.sort(productList, Comparator.comparing(Product::getProductId));
         System.out.println("Products in the system:");
         for (Product product : productList) {
             System.out.println("----------------------------------------");
@@ -92,6 +116,28 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 System.out.println("Warranty Period: " + electronics.getWarrantyPeriod() + " months");
             }
             System.out.println("----------------------------------------");
+        }
+    }
+
+    // Method to update the items quantity with the productID
+    @Override
+    public void updateProductQty() {
+        System.out.print("\nEnter the product ID to update: ");
+        String productIdToUpdate = scanner.nextLine();
+        boolean productFound = false;
+        for (Product product : productList) {
+            if (product.getProductId().equals(productIdToUpdate)) {
+                System.out.print("Enter the new quantity: ");
+                int newQty = scanner.nextInt();
+                product.setProductQty(newQty);
+                System.out.println("Product with ID " + productIdToUpdate + " has been updated.");
+                productFound = true;
+                saveToFile();
+                break;
+            }
+        }
+        if (!productFound) {
+            System.out.println("Product with ID " + productIdToUpdate + " not found in the system.");
         }
     }
 
@@ -122,6 +168,13 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    // Method to open the GUI
+    @Override
+    public void openGUI() {
+        // Create an instance of LoginGUI
+        new LoginGUI();
+    }
+
     // Method to display the console menu
     public void displayMenu() {
         int choice;
@@ -148,10 +201,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
                         addNewProduct();
                         break;
                     case 2:
-                        deleteProduct();
+                        removeProduct();
                         break;
                     case 3:
-                        printProductList();
+                        displayProducts();
                         break;
                     case 4:
                         updateProductQty();
@@ -178,27 +231,36 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     // Method to add a new product to the system based on user input
     private void addNewProduct() {
-        try {
-            System.out.println("\nAdding a new product to the system:");
-            System.out.println("1. Add Electronics");
-            System.out.println("2. Add Clothing");
-            System.out.print("Enter your choice: ");
-            int productType = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+        boolean validInput = false;
+        while (!validInput) {
 
-            switch (productType) {
-                case 1:
-                    addElectronics();
-                    break;
-                case 2:
-                    addClothing();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Returning to the main menu.");
+            try {
+                System.out.println("\nAdding a new product to the system:");
+                System.out.println("1. Add Electronics");
+                System.out.println("2. Add Clothing");
+                System.out.println("3. Back to main menu");
+                System.out.print("Enter your choice: ");
+                int productType = scanner.nextInt();
+                scanner.nextLine(); // Consume the newline character
+
+                switch (productType) {
+                    case 1:
+                        addElectronics();
+                        break;
+                    case 2:
+                        addClothing();
+                        break;
+                    case 3:
+                        displayMenu();
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter the corrrect option.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter the correct type for each field.");
+                scanner.nextLine(); // clear the scanner
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter the correct type for each field.");
-            scanner.nextLine(); // clear the scanner
         }
     }
 
@@ -213,7 +275,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
     private void addElectronics() {
-
         boolean validInput = false;
         while (!validInput) {
             try {
@@ -242,7 +303,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
     private void addClothing() {
-
         boolean validInput = false;
         while (!validInput) {
             try {
@@ -266,63 +326,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 System.out.println("Invalid input. Please enter the correct type for each field.");
                 scanner.nextLine(); // clear the scanner
             }
-        }
-    }
-
-    // Method to delete a product from the system based on user input
-    private void deleteProduct() {
-        System.out.print("\nEnter the product ID to delete: ");
-        String productIdToDelete = scanner.nextLine();
-
-        // Find the product with the given ID
-        Product productToDelete = null;
-        for (Product product : productList) {
-            if (product.getProductId().equals(productIdToDelete)) {
-                productToDelete = product;
-                break;
-            }
-        }
-
-        if (productToDelete != null) {
-            // Determine if the product is electronics or clothing
-            String productType = (productToDelete instanceof Electronics) ? "Electronics" : "Clothing";
-
-            // Remove the product from the system
-            removeProduct(productToDelete);
-
-            // Display information about the deleted product and the total number of
-            // products left
-            System.out.println(productType + " with ID " + productIdToDelete + " has been deleted from the system.");
-            System.out.println("Total number of products left in the system: " + productList.size());
-        } else {
-            System.out.println("Product with ID " + productIdToDelete + " not found in the system.");
-        }
-    }
-
-    // Method to print the list of products alphabetically by product ID
-    private void printProductList() {
-        Collections.sort(productList, Comparator.comparing(Product::getProductId));
-        displayProducts();
-    }
-
-    // Method to update the items quantity with the productID
-    private void updateProductQty() {
-        System.out.print("\nEnter the product ID to update: ");
-        String productIdToUpdate = scanner.nextLine();
-        boolean productFound = false;
-        for (Product product : productList) {
-            if (product.getProductId().equals(productIdToUpdate)) {
-                System.out.print("Enter the new quantity: ");
-                int newQty = scanner.nextInt();
-                product.setProductQty(newQty);
-                System.out.println("Product with ID " + productIdToUpdate + " has been updated.");
-                productFound = true;
-                saveToFile();
-                break;
-            }
-        }
-        if (!productFound) {
-            System.out.println("Product with ID " + productIdToUpdate + " not found in the system.");
         }
     }
 
@@ -359,12 +362,6 @@ public class WestminsterShoppingManager implements ShoppingManager {
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error loading users from file: " + e.getMessage());
         }
-    }
-
-    // Method to open the GUI
-    private void openGUI() {
-        // Create an instance of LoginGUI
-        new LoginGUI();
     }
 
     public static User getCurrentUser() {
