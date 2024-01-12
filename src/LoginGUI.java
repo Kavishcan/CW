@@ -5,9 +5,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -29,9 +30,13 @@ public class LoginGUI extends JFrame {
         pack();
         setVisible(true);
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void initComponents() {
+        Color colour1 = Color.getHSBColor(255, 193, 159);
+        Color buttonBgColor = Color.getHSBColor(255, 193, 159);
+
         usernameField = new JTextField(20);
         firstNameField = new JTextField(20);
         lastNamField = new JTextField(20);
@@ -50,14 +55,24 @@ public class LoginGUI extends JFrame {
         signUpPasswordLabel = new JLabel("Password:");
         signUpConfirmPasswordLabel = new JLabel("Confirm Password:");
         signUpEmailLabel = new JLabel("Email:");
-        loginButton = new JButton("Login");
-        signUpButton = new JButton("Sign Up");
-        cancButton = new JButton("Cancel");
-        createButton = new JButton("Create Account");
+
+        loginButton = createButton("Login", new Font("Roboto Mono", Font.BOLD, 16), Color.WHITE, buttonBgColor, new LineBorder(buttonBgColor));
+        signUpButton = createButton("Sign Up", new Font("Roboto Mono", Font.BOLD, 16), Color.WHITE, buttonBgColor, new LineBorder(buttonBgColor));
+        cancButton = createButton("Cancel", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        createButton = createButton("Create Account", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+
         loginPasswordField = new JPasswordField(20);
         signUpPasswordField = new JPasswordField(20);
         signUpConfirmPasswordField = new JPasswordField(20);
 
+    }
+    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setForeground(foreground);
+        button.setBackground(background);
+        button.setBorder(border);
+        return button;
     }
 
     private void layoutGUI() {

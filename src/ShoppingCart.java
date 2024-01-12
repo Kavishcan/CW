@@ -74,7 +74,7 @@ public class ShoppingCart implements Serializable {
         } else if (electronicsCount >= 3) {
             return (calculateTotalCost() * 0.2);
         } else {
-            return 0;
+            return 0.0;
         }
 
     }

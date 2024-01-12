@@ -1,9 +1,13 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.util.*;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 public class ShoppingGUI extends JFrame {
 
@@ -30,6 +34,11 @@ public class ShoppingGUI extends JFrame {
     }
 
     public void initComponents() {
+
+        Color colour1 = Color.getHSBColor(255, 193, 159);
+        Color colour2 = Color.getHSBColor(255, 20, 159);
+        Color buttonBgColor = Color.getHSBColor(255, 193, 159);
+
         selectProductLabel = new JLabel("Select Product:");
         cartHeading = new JLabel("Selected Product - Details");
         cartProductId = new JLabel("Product Id");
@@ -38,19 +47,45 @@ public class ShoppingGUI extends JFrame {
         cartSpeical1 = new JLabel("Special 1");
         cartSpecial2 = new JLabel("Special 2");
         cartQty = new JLabel("Quantity");
-        addToShoppingCart = new JButton("Add to Shopping Cart");
-        viewShoppingCart = new JButton("View Shopping Cart");
-        sortButton = new JButton("Sort");
-        logOutButton = new JButton("Log Out");
+        addToShoppingCart = createButton("Add to Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        viewShoppingCart = createButton("View Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        sortButton = createButton("Sort", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        logOutButton = createButton("Log Out", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
         productComboBox = new JComboBox<>(new String[] { "All", "Electronics", "Clothing" });
 
         String[] columnNames = { "Product Id", "Name", "Category", "Price", "Info" };
 
         ArrayList<Product> products = WestminsterShoppingManager.getProductList();
-        DefaultTableModel model = new DefaultTableModel(convertListToData(products), columnNames);
+        DefaultTableModel model = new DefaultTableModel(convertListToData(products), columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         productsTable = new JTable(model);
-        // productsTable.isCellEditable(ERROR, ABORT);
+        productsTable.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
+        productsTable.setForeground(Color.BLACK);// Set the foreground and background colors of the table
+        productsTable.setBackground(colour2);// Set the foreground and background colors of the table
+        productsTable.setGridColor(Color.BLACK);// Set the grid color of the table
+        productsTable.setRowHeight(20); // Set the row height
+
+        JTableHeader header = productsTable.getTableHeader();
+        header.setBackground(colour1);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Roboto Mono", Font.BOLD, 16));
+
         scrollPane = new JScrollPane(productsTable);
+        scrollPane.setPreferredSize(new Dimension(600, 400));
+    }
+
+    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setForeground(foreground);
+        button.setBackground(background);
+        button.setBorder(border);
+        return button;
     }
 
     public void layoutGUI(User user) {
@@ -72,7 +107,8 @@ public class ShoppingGUI extends JFrame {
         add(viewShoppingCart, constraints);
 
         viewShoppingCart.addActionListener(e -> {
-            new ShoppingCartGUI(user);
+            ShoppingCartGUI shoppingCartGUI = new ShoppingCartGUI(user);
+            shoppingCartGUI.setVisible(true);
         });
 
         constraints.gridy++;
@@ -218,6 +254,9 @@ public class ShoppingGUI extends JFrame {
         constraints.gridy++;
         add(addToShoppingCart, constraints);
 
+        ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
+        ShoppingCartGUI.setVisible(false);
+
         addToShoppingCart.addActionListener(e -> {
             int row = productsTable.getSelectedRow();
             if (row >= 0) {
@@ -230,11 +269,8 @@ public class ShoppingGUI extends JFrame {
                     product.setProductQty(product.getProductQty() - 1);
                     panel.setVisible(false);
 
-                    ShoppingCartGUI ShoppingCartGUI = new ShoppingCartGUI(user);
-                    ShoppingCartGUI.setVisible(false);
-                    if (ShoppingCartGUI != null) {
-                        ShoppingCartGUI.updateCart(user);
-                    }
+                    // ShoppingCartGUI.setVisible(false);
+                    ShoppingCartGUI.updateCart(user);
                 }
                 pack();
             }

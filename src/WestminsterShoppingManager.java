@@ -49,19 +49,26 @@ public class WestminsterShoppingManager implements ShoppingManager {
     // Implementation of interface methods
     @Override
     public void addProduct(Product product) {
+        // Check if a product with the same ID already exists
+        for (Product existingProduct : productList) {
+            if (existingProduct.getProductId().equals(product.getProductId())) {
+                System.out.println("A product with ID " + product.getProductId() + " already exists. Cannot add the product.");
+                return;
+            }
+        }
+
+        // Check if the product list has reached its maximum size
         if (productList.size() < MAX_PRODUCTS) {
             productList.add(product);
             System.out.println(product.getProductName() + " added to the system.");
+            saveToFile();
         } else {
             System.out.println("Maximum limit of products reached. Cannot add more products.");
         }
     }
 
     @Override
-    public void removeProduct() {
-        System.out.print("\nEnter the product ID to delete: ");
-        String productIdToDelete = scanner.nextLine();
-
+    public void removeProduct(String productIdToDelete) {
         // Find the product with the given ID
         Product productToDelete = null;
         for (Product product : productList) {
@@ -121,14 +128,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     // Method to update the items quantity with the productID
     @Override
-    public void updateProductQty() {
-        System.out.print("\nEnter the product ID to update: ");
-        String productIdToUpdate = scanner.nextLine();
+    public void updateProductQty(String productIdToUpdate, int newQty) {
         boolean productFound = false;
         for (Product product : productList) {
             if (product.getProductId().equals(productIdToUpdate)) {
-                System.out.print("Enter the new quantity: ");
-                int newQty = scanner.nextInt();
                 product.setProductQty(newQty);
                 System.out.println("Product with ID " + productIdToUpdate + " has been updated.");
                 productFound = true;
@@ -187,8 +190,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
             System.out.println("3. Print the list of products in the system ");
             System.out.println("4. Update the quantity of a product ");
             System.out.println("5. Save products to file ");
-            System.out.println("6. Open GUI ");
-            System.out.println("7. Exit ");
+            System.out.println("6. Load products from file ");
+            System.out.println("7. Open GUI ");
+            System.out.println("8. Exit ");
             System.out.println("--------------------------------------------------");
             System.out.print("Enter your choice: ");
 
@@ -201,21 +205,61 @@ public class WestminsterShoppingManager implements ShoppingManager {
                         addNewProduct();
                         break;
                     case 2:
-                        removeProduct();
+                        String productIdToDelete = "";
+
+                        while (true) {
+                            try {
+                                System.out.print("\nEnter the product ID to delete: ");
+                                productIdToDelete = scanner.nextLine();
+                                break;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a valid product name.");
+                                scanner.nextLine(); // clear the scanner
+                            }
+                        }
+                        removeProduct(productIdToDelete);
                         break;
                     case 3:
                         displayProducts();
                         break;
                     case 4:
-                        updateProductQty();
+                        String productIdToUpdate = "";
+                        int newQty = 0;
+
+                        while (true) {
+                            try {
+                                System.out.print("\nEnter the product ID to update: ");
+                                productIdToUpdate = scanner.nextLine();
+                                break;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a valid product name.");
+                                scanner.nextLine(); // clear the scanner
+                            }
+                        }
+
+                        while (true) {
+                            try {
+                                System.out.print("Enter the new quantity: ");
+                                newQty = scanner.nextInt();
+                                break;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a valid product name.");
+                                scanner.nextLine(); // clear the scanner
+                            }
+                        }
+
+                        updateProductQty(productIdToUpdate, newQty);
                         break;
                     case 5:
                         saveToFile();
                         break;
                     case 6:
-                        openGUI();
+                        loadFromFile();
                         break;
                     case 7:
+                        openGUI();
+                        break;
+                    case 8:
                         System.out.println("Exiting the system manager.");
                         break;
                     default:
@@ -226,11 +270,12 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 scanner.nextLine(); // clear the scanner
                 choice = 0; // reset choice
             }
-        } while (choice != 7);
+        } while (choice != 8);
     }
 
     // Method to add a new product to the system based on user input
     private void addNewProduct() {
+
         boolean validInput = false;
         while (!validInput) {
 
@@ -243,19 +288,59 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 int productType = scanner.nextInt();
                 scanner.nextLine(); // Consume the newline character
 
+
+                String productName = "";
+                double price = 0;
+                int productQty = 0;
+
+                while (true) {
+                    try {
+                        System.out.print("Enter product name: ");
+                        productName = scanner.nextLine();
+                        break;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a valid product name.");
+                        scanner.nextLine(); // clear the scanner
+                    }
+                }
+
+                while (true) {
+                    try {
+                        System.out.print("Enter price: ");
+                        price = scanner.nextDouble();
+                        break;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a valid price.");
+                        scanner.nextLine(); // clear the scanner
+                    }
+                }
+
+                while (true) {
+                    try {
+                        System.out.print("Enter product quantity: ");
+                        productQty = scanner.nextInt();
+                        scanner.nextLine(); // Consume the newline character
+                        break;
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a valid product quantity.");
+                        scanner.nextLine(); // clear the scanner
+                    }
+                }
+
                 switch (productType) {
                     case 1:
-                        addElectronics();
+                        addElectronics(productName, price, productQty);
                         break;
                     case 2:
-                        addClothing();
+                        addClothing(productName, price, productQty);
                         break;
                     case 3:
                         displayMenu();
                         break;
                     default:
-                        System.out.println("Invalid choice. Please enter the corrrect option.");
+                        System.out.println("Invalid choice. Please enter the correct option.");
                 }
+                validInput = true;
 
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter the correct type for each field.");
@@ -265,69 +350,95 @@ public class WestminsterShoppingManager implements ShoppingManager {
     }
 
     private String generateProductId(String productType) {
+        int counter = productList.size() + 1;
         String productId = "";
-        if (productType.equals("Electronics")) {
-            productId = "E" + String.format("%03d", productList.size() + 1);
-        } else if (productType.equals("Clothing")) {
-            productId = "C" + String.format("%03d", productList.size() + 1);
+
+        while (true) {
+            if (productType.equals("Electronics")) {
+                productId = "E" + String.format("%03d", counter);
+            } else if (productType.equals("Clothing")) {
+                productId = "C" + String.format("%03d", counter);
+            }
+
+            boolean idExists = false;
+            for (Product product : productList) {
+                if (product.getProductId().equals(productId)) {
+                    idExists = true;
+                    break;
+                }
+            }
+
+            if (!idExists) {
+                break;
+            }
+
+            counter++;
         }
+
         return productId;
     }
+    private void addElectronics(String productName, double price ,int productQty) {
+        String productId = generateProductId("Electronics");
+        String brand = "";
+        int warrantyPeriod = 0;
 
-    private void addElectronics() {
-        boolean validInput = false;
-        while (!validInput) {
+        while (true) {
             try {
-                String productId = generateProductId("Electronics");
-                System.out.print("Enter product name: ");
-                String productName = scanner.nextLine();
-                System.out.print("Enter price: ");
-                double price = scanner.nextDouble();
-                System.out.print("Enter product quantity: ");
-                int productQty = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
                 System.out.print("Enter brand: ");
-                String brand = scanner.nextLine();
-                System.out.print("Enter warranty period (in months): ");
-                int warrantyPeriod = scanner.nextInt();
-
-                Electronics electronics = new Electronics(productId, productName, productQty, price, brand,
-                        warrantyPeriod);
-                addProduct(electronics);
-                validInput = true;
+                brand = scanner.nextLine();
+                break;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter the correct type for each field.");
+                System.out.println("Invalid input. Please enter a valid brand.");
                 scanner.nextLine(); // clear the scanner
             }
         }
-    }
 
-    private void addClothing() {
-        boolean validInput = false;
-        while (!validInput) {
+        while (true) {
             try {
-                String productId = generateProductId("Clothing");
-                System.out.print("Enter product name: ");
-                String productName = scanner.nextLine();
-                System.out.print("Enter price: ");
-                double price = scanner.nextDouble();
-                System.out.print("Enter product quantity: ");
-                int productQty = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
-                System.out.print("Enter size: ");
-                String sizes = scanner.nextLine();
-                System.out.print("Enter color: ");
-                String color = scanner.nextLine();
-
-                Clothing clothing = new Clothing(productId, productName, productQty, price, sizes, color);
-                addProduct(clothing);
-                validInput = true;
+                System.out.print("Enter warranty period (in months): ");
+                warrantyPeriod = scanner.nextInt();
+                break;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter the correct type for each field.");
+                System.out.println("Invalid input. Please enter a valid warranty period.");
                 scanner.nextLine(); // clear the scanner
             }
         }
+
+        Electronics electronics = new Electronics(productId, productName, productQty, price, brand, warrantyPeriod);
+        addProduct(electronics);
     }
+
+    private void addClothing(String productName, double price ,int productQty) {
+        String productId = generateProductId("Clothing");
+        String size = "";
+        String colour = "";
+
+        while (true) {
+            try {
+                System.out.print("Enter size: ");
+                size = scanner.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid size.");
+                scanner.nextLine(); // clear the scanner
+            }
+        }
+
+        while (true) {
+            try {
+                System.out.print("Enter colour: ");
+                colour = scanner.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid colour.");
+                scanner.nextLine(); // clear the scanner
+            }
+        }
+
+        Clothing clothing = new Clothing(productId, productName, productQty, price, size, colour);
+        addProduct(clothing);
+    }
+
 
     // Method to save the list of products to a file
     static void saveProductsToFile() {
