@@ -11,13 +11,13 @@ public class User implements Serializable {
     private ShoppingCart shoppingCart;
     private boolean firstPurchase;
 
-    public boolean isFirstPurchase() {
-        return firstPurchase;
-    }
-
     public User() {
         this.shoppingCart = new ShoppingCart();
         this.firstPurchase = true;
+    }
+
+    public boolean isFirstPurchase() {
+        return firstPurchase;
     }
 
     public void setFirstPurchase(boolean firstPurchase) {
@@ -59,20 +59,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         if (!email.matches(emailRegex)) {
             throw new IllegalArgumentException("Invalid email format");
         }
         this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -83,10 +75,6 @@ public class User implements Serializable {
         this.firstName = firstName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public void setLastName(String lastName) {
         // Check if the last name only contains alphabet letters
         if (!lastName.matches("[a-zA-Z]+")) {
@@ -95,19 +83,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getAge() {
-        return age;
-    }
 
     public void setAge(int age) {
         if (age <= 17 || age >= 100) {
             throw new IllegalArgumentException("Age must be a positive number and between 18 and 100");
         }
         this.age = age;
-    }
-
-    public String getGender() {
-        return gender;
     }
 
     public void setGender(String gender) {

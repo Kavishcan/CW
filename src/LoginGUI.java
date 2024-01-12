@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 public class LoginGUI extends JFrame {
 
-    private JTextField usernameField, firstNameField, lastNamField, genderField, ageField, signUpUserNameField,
-            signUpEmailField;
     private JLabel welcomLabel, usernameLabel, passwordLabel, firstNameLabel, lastNameLabel, genderLabel, ageLabel,
             signUpUserNameLabel, signUpPasswordLabel, signUpConfirmPasswordLabel, signUpEmailLabel;
+    private JTextField usernameField, firstNameField, lastNamField, genderField, ageField, signUpUserNameField,
+            signUpEmailField;
     private JButton loginButton, signUpButton, cancButton, createButton;
     private JPasswordField loginPasswordField, signUpPasswordField, signUpConfirmPasswordField;
 
@@ -29,8 +29,8 @@ public class LoginGUI extends JFrame {
         layoutGUI();
         pack();
         setVisible(true);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WestminsterShoppingManager.loadUsersFromFile();
     }
 
     private void initComponents() {
@@ -45,6 +45,7 @@ public class LoginGUI extends JFrame {
         signUpUserNameField = new JTextField(20);
         signUpEmailField = new JTextField(20);
         welcomLabel = new JLabel("Welcome to Westminster Shopping");
+        welcomLabel.setFont(new Font("Arial", Font.BOLD, 20)); // Set the font to Arial, bold, and size 24
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password:");
         firstNameLabel = new JLabel("First Name:");
@@ -56,16 +57,21 @@ public class LoginGUI extends JFrame {
         signUpConfirmPasswordLabel = new JLabel("Confirm Password:");
         signUpEmailLabel = new JLabel("Email:");
 
-        loginButton = createButton("Login", new Font("Roboto Mono", Font.BOLD, 16), Color.WHITE, buttonBgColor, new LineBorder(buttonBgColor));
-        signUpButton = createButton("Sign Up", new Font("Roboto Mono", Font.BOLD, 16), Color.WHITE, buttonBgColor, new LineBorder(buttonBgColor));
-        cancButton = createButton("Cancel", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
-        createButton = createButton("Create Account", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        loginButton = createButton("Login", new Font("San-serif", Font.BOLD, 14), Color.WHITE, buttonBgColor,
+                new LineBorder(buttonBgColor));
+        signUpButton = createButton("Sign Up", new Font("Roboto Mono", Font.BOLD, 14), Color.WHITE, buttonBgColor,
+                new LineBorder(buttonBgColor));
+        cancButton = createButton("Cancel", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1,
+                new LineBorder(colour1));
+        createButton = createButton("Create Account", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1,
+                new LineBorder(colour1));
 
         loginPasswordField = new JPasswordField(20);
         signUpPasswordField = new JPasswordField(20);
         signUpConfirmPasswordField = new JPasswordField(20);
 
     }
+
     private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -100,13 +106,14 @@ public class LoginGUI extends JFrame {
         constraints.gridx = 1;
         add(loginPasswordField, constraints);
 
-        constraints.gridx = 0;
         constraints.gridy++;
-        constraints.gridwidth = 2;
-        add(loginButton, constraints);
+        constraints.gridwidth = 1;
 
-        constraints.gridy++;
+        constraints.gridx = 0;
         add(signUpButton, constraints);
+
+        constraints.gridx = 1;
+        add(loginButton, constraints);
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -224,9 +231,6 @@ public class LoginGUI extends JFrame {
                     WestminsterShoppingManager.getUserList().add(user);
                     ArrayList<User> userList = WestminsterShoppingManager.getUserList();
                     System.out.println(userList);
-                    // for (User use : userList) {
-                    // System.out.println(use.getUsername());
-                    // }
                     JOptionPane.showMessageDialog(signUpGUI, "Account created successfully", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
                     WestminsterShoppingManager.saveUsersToFile();

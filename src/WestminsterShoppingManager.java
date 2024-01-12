@@ -4,7 +4,7 @@ import java.util.*;
 // Class: WestminsterShoppingManager
 public class WestminsterShoppingManager implements ShoppingManager {
     private static final int MAX_PRODUCTS = 50;
-    private static ArrayList<Product> productList;
+    private static ArrayList<Product>  productList;
     private static ArrayList<User> userList;
     private static User currentUser;
     private Scanner scanner;
@@ -14,7 +14,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         WestminsterShoppingManager.productList = new ArrayList<>();
         WestminsterShoppingManager.userList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
-        loadUsersFromFile();
+         loadUsersFromFile();
         loadFromFile();
     }
 
@@ -45,6 +45,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
         return product;
     }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
 
     // Implementation of interface methods
     @Override
@@ -144,6 +153,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    // Method to save the list of products to a file
     @Override
     public void saveToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("products.txt"))) {
@@ -154,6 +164,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    // Method to load the list of products from a file at application startup
     @Override
     @SuppressWarnings("unchecked")
     public void loadFromFile() {
@@ -213,7 +224,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                                 productIdToDelete = scanner.nextLine();
                                 break;
                             } catch (InputMismatchException e) {
-                                System.out.println("Invalid input. Please enter a valid product name.");
+                                System.out.println("Invalid input. Please enter a valid product ID:");
                                 scanner.nextLine(); // clear the scanner
                             }
                         }
@@ -232,7 +243,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
                                 productIdToUpdate = scanner.nextLine();
                                 break;
                             } catch (InputMismatchException e) {
-                                System.out.println("Invalid input. Please enter a valid product name.");
+                                System.out.println("Invalid input. Please enter a valid product ID to update:");
                                 scanner.nextLine(); // clear the scanner
                             }
                         }
@@ -243,11 +254,10 @@ public class WestminsterShoppingManager implements ShoppingManager {
                                 newQty = scanner.nextInt();
                                 break;
                             } catch (InputMismatchException e) {
-                                System.out.println("Invalid input. Please enter a valid product name.");
+                                System.out.println("Invalid input. Please enter a valid quantity:");
                                 scanner.nextLine(); // clear the scanner
                             }
                         }
-
                         updateProductQty(productIdToUpdate, newQty);
                         break;
                     case 5:
@@ -293,16 +303,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
                 double price = 0;
                 int productQty = 0;
 
-                while (true) {
-                    try {
-                        System.out.print("Enter product name: ");
-                        productName = scanner.nextLine();
-                        break;
-                    } catch (InputMismatchException e) {
-                        System.out.println("Invalid input. Please enter a valid product name.");
-                        scanner.nextLine(); // clear the scanner
-                    }
-                }
+
+                System.out.print("Enter product name: ");
+                productName = scanner.nextLine();
 
                 while (true) {
                     try {
@@ -349,7 +352,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-    private String generateProductId(String productType) {
+    // Method to generate a unique product ID
+    String generateProductId(String productType) {
         int counter = productList.size() + 1;
         String productId = "";
 
@@ -377,21 +381,15 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
         return productId;
     }
+
+    // Method to add electronics to the system
     private void addElectronics(String productName, double price ,int productQty) {
         String productId = generateProductId("Electronics");
         String brand = "";
         int warrantyPeriod = 0;
 
-        while (true) {
-            try {
-                System.out.print("Enter brand: ");
-                brand = scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid brand.");
-                scanner.nextLine(); // clear the scanner
-            }
-        }
+        System.out.print("Enter brand: ");
+        brand = scanner.nextLine();
 
         while (true) {
             try {
@@ -408,32 +406,17 @@ public class WestminsterShoppingManager implements ShoppingManager {
         addProduct(electronics);
     }
 
+    // Method to add clothing to the system
     private void addClothing(String productName, double price ,int productQty) {
         String productId = generateProductId("Clothing");
         String size = "";
         String colour = "";
 
-        while (true) {
-            try {
-                System.out.print("Enter size: ");
-                size = scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid size.");
-                scanner.nextLine(); // clear the scanner
-            }
-        }
+        System.out.print("Enter size: ");
+        size = scanner.nextLine();
 
-        while (true) {
-            try {
-                System.out.print("Enter colour: ");
-                colour = scanner.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid colour.");
-                scanner.nextLine(); // clear the scanner
-            }
-        }
+        System.out.print("Enter colour: ");
+        colour = scanner.nextLine();
 
         Clothing clothing = new Clothing(productId, productName, productQty, price, size, colour);
         addProduct(clothing);
@@ -463,7 +446,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
 
     // Method to load the list of users from a file at application startup
     @SuppressWarnings("unchecked")
-    private void loadUsersFromFile() {
+    static void loadUsersFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("users.txt"))) {
             Object obj = ois.readObject();
             if (obj instanceof List) {
@@ -475,11 +458,4 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
-    public static User getCurrentUser() {
-        return currentUser;
-    }
-
-    public static void setCurrentUser(User user) {
-        currentUser = user;
-    }
 }

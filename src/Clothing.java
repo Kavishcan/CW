@@ -1,4 +1,4 @@
-public class Clothing extends Product {
+public class  Clothing extends Product {
     private String size;
     private String colour;
 
@@ -12,19 +12,11 @@ public class Clothing extends Product {
         return size;
     }
 
-    public void setSize(String size) {
-        this.size = size;
-    }
-
     public String getColour() {
         return colour;
     }
 
-    public void setColour(String colour) {
-        this.colour = colour;
-    }
-
     public String getInfo() {
-        return size + " " + colour;
+        return size + ", " + colour;
     }
 }

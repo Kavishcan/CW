@@ -7,7 +7,7 @@ public interface ShoppingManager {
 
     void updateProductQty(String productIdToUpdate, int newQty);
 
-    void saveToFile();
+    void    saveToFile();
 
     void loadFromFile();
 

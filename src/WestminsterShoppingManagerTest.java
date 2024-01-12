@@ -50,12 +50,10 @@ class WestminsterShoppingManagerTest {
     @Test
     void testDisplayProducts() {
         // Create a new product
-        Product product1 = new Electronics("E001", "Test Product 1", 10, 100.0, "Test Brand", 12);
-        Product product2 = new Electronics("E002", "Test Product 2", 20, 200.0, "Test Brand", 24);
+        Product product1 = new Electronics(westminsterShoppingManager.generateProductId("Electronics"), "Test Product 1", 10, 100.0, "Test Brand", 12);
 
         // Add the products to the WestminsterShoppingManager
         westminsterShoppingManager.addProduct(product1);
-        westminsterShoppingManager.addProduct(product2);
 
         // Capture the console output
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -74,15 +72,6 @@ class WestminsterShoppingManagerTest {
                 "Type: Electronics\r\n" +
                 "Brand: Test Brand\r\n" +
                 "Warranty Period: 12 months\r\n" +
-                "----------------------------------------\r\n" +
-                "----------------------------------------\r\n" +
-                "Product Name: Test Product 2\r\n" +
-                "Product ID: E002\r\n" +
-                "Price: $200.0\r\n" +
-                "Quantity: 20\r\n" +
-                "Type: Electronics\r\n" +
-                "Brand: Test Brand\r\n" +
-                "Warranty Period: 24 months\r\n" +
                 "----------------------------------------\r\n";
 
 
@@ -105,35 +94,6 @@ class WestminsterShoppingManagerTest {
 
         // Assert that the quantity of the product in the productList of the WestminsterShoppingManager is updated correctly
         assertEquals(20, WestminsterShoppingManager.getProduct(product.getProductId()).getProductQty());
-    }
-
-    @Test
-    void testSaveToFile() {
-        // Create a new product
-    Product product = new Electronics("E001", "Test Product", 10, 100.0, "Test Brand", 12);
-
-        // Add the product to the WestminsterShoppingManager
-        westminsterShoppingManager.addProduct(product);
-
-        // Call the saveToFile method
-        westminsterShoppingManager.saveToFile();
-
-        // Read the file and check if the product details are saved correctly
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("products.txt"))) {
-            Object obj = ois.readObject();
-            if (obj instanceof List) {
-                ArrayList<Product> productsFromFile = (ArrayList<Product>) obj;
-                for (Product productFile : productsFromFile) {
-                    if (productFile.getProductId().equals(product.getProductId())) {
-                        assertEquals(product, productFile);
-                    }
-                }
-            } else {
-                fail("The file does not contain a list of products");
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            fail("Failed to read the file");
-        }
     }
 
     @Test

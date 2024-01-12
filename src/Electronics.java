@@ -14,20 +14,11 @@ public class Electronics extends Product {
         return brand;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
     public int getWarrantyPeriod() {
         return warrantyPeriod;
     }
 
-    public void setWarrantyPeriod(int warrantyPeriod) {
-        this.warrantyPeriod = warrantyPeriod;
-    }
-
     public String getInfo() {
-        return brand + " " + warrantyPeriod + " months";
+        return brand + ", " + warrantyPeriod + " months";
     }
-
 }

@@ -20,14 +20,15 @@ public class ShoppingGUI extends JFrame {
     private JPanel panel;
 
     public ShoppingGUI(User user) {
-        setTitle("Westminster Shopping Login Page");
+        setTitle("Westminster Shopping");
 
         setLayout(new GridBagLayout());
         initComponents();
         layoutGUI(user);
         setVisible(true);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 800);
+
 
         pack();
         setLocationRelativeTo(null);
@@ -39,8 +40,12 @@ public class ShoppingGUI extends JFrame {
         Color colour2 = Color.getHSBColor(255, 20, 159);
         Color buttonBgColor = Color.getHSBColor(255, 193, 159);
 
-        selectProductLabel = new JLabel("Select Product:");
+        selectProductLabel = new JLabel("Select Product Category:");
+        selectProductLabel.setFont(new Font("Roboto Mono", Font.BOLD, 18));
+
         cartHeading = new JLabel("Selected Product - Details");
+        cartHeading.setFont(new Font("Roboto Mono", Font.BOLD, 14));
+
         cartProductId = new JLabel("Product Id");
         cartCategory = new JLabel("Category");
         cartName = new JLabel("Name");
@@ -53,7 +58,7 @@ public class ShoppingGUI extends JFrame {
         logOutButton = createButton("Log Out", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
         productComboBox = new JComboBox<>(new String[] { "All", "Electronics", "Clothing" });
 
-        String[] columnNames = { "Product Id", "Name", "Category", "Price", "Info" };
+        String[] columnNames = { "Product Id", "Name", "Category", "Price(£)", "Info" };
 
         ArrayList<Product> products = WestminsterShoppingManager.getProductList();
         DefaultTableModel model = new DefaultTableModel(convertListToData(products), columnNames) {
@@ -75,10 +80,13 @@ public class ShoppingGUI extends JFrame {
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Roboto Mono", Font.BOLD, 16));
 
+        // Center align the table cells
+
         scrollPane = new JScrollPane(productsTable);
-        scrollPane.setPreferredSize(new Dimension(600, 400));
+        scrollPane.setPreferredSize(new Dimension(800, 300));
     }
 
+    // method to style a button
     private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
         JButton button = new JButton(text);
         button.setFont(font);
@@ -101,6 +109,7 @@ public class ShoppingGUI extends JFrame {
         logOutButton.addActionListener(e -> {
             dispose();
             new LoginGUI();
+            WestminsterShoppingManager.saveUsersToFile();
         });
 
         constraints.gridx = 1;
@@ -118,13 +127,14 @@ public class ShoppingGUI extends JFrame {
         constraints.gridx = 1;
         add(productComboBox, constraints);
 
-        // show the product combo box selected item in the table
+        // shows the product combo box selected item in the table
         productComboBox.addActionListener(e -> {
             String selectedCategory = (String) productComboBox.getSelectedItem();
             ArrayList<Product> products = WestminsterShoppingManager.getProductList();
             if (selectedCategory.equals("All")) {
                 productsTable.setModel(new DefaultTableModel(convertListToData(products),
-                        new String[] { "Product Id", "Name", "Category", "Price", "Info" }));
+                        new String[] { "Product Id", "Name", "Category", "Price(£)", "Info" }));
+
             } else if (selectedCategory.equals("Electronics")) {
                 ArrayList<Product> electronics = new ArrayList<>();
                 for (Product product : products) {
@@ -133,7 +143,8 @@ public class ShoppingGUI extends JFrame {
                     }
                 }
                 productsTable.setModel(new DefaultTableModel(convertListToData(electronics),
-                        new String[] { "Product Id", "Name", "Category", "Price", "Info" }));
+                        new String[] { "Product Id", "Name", "Category", "Price(£)", "Info" }));
+
             } else if (selectedCategory.equals("Clothing")) {
                 ArrayList<Product> clothing = new ArrayList<>();
                 for (Product product : products) {
@@ -142,7 +153,27 @@ public class ShoppingGUI extends JFrame {
                     }
                 }
                 productsTable.setModel(new DefaultTableModel(convertListToData(clothing),
-                        new String[] { "Product Id", "Name", "Category", "Price", "Info" }));
+                        new String[] { "Product Id", "Name", "Category", "Price(£)", "Info" }));
+            }
+
+        });
+
+        productsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                           boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                String productId = (String) table.getValueAt(row, 0);
+                Product product = WestminsterShoppingManager.getProduct(productId);
+                if (product != null && product.getProductQty() <= 3) {
+                    c.setForeground(Color.RED);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+                if (c instanceof JLabel) {
+                    ((JLabel) c).setHorizontalAlignment(SwingConstants.CENTER);
+                }
+                return c;
             }
         });
 
@@ -154,7 +185,7 @@ public class ShoppingGUI extends JFrame {
             ArrayList<Product> products = WestminsterShoppingManager.getProductList();
             Collections.sort(products, Comparator.comparing(Product::getProductId));
             productsTable.setModel(new DefaultTableModel(convertListToData(products),
-                    new String[] { "Product Id", "Name", "Category", "Price", "Info" }));
+                    new String[] { "Product Id", "Name", "Category", "Price(£)", "Info" }));
         });
 
         constraints.gridwidth = 2;
@@ -199,23 +230,12 @@ public class ShoppingGUI extends JFrame {
             }
         });
 
-        productsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                    boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                String productId = (String) table.getValueAt(row, 0);
-                Product product = WestminsterShoppingManager.getProduct(productId);
-                if (product != null && product.getProductQty() <= 3) {
-                    c.setForeground(Color.RED);
-                } else {
-                    c.setForeground(Color.BLACK);
-                }
-                return c;
-            }
-        });
+
+
+
 
         constraints.gridy++;
+        constraints.gridx = 0;
         add(cartHeading, constraints);
 
         panel = new JPanel();
@@ -223,9 +243,7 @@ public class ShoppingGUI extends JFrame {
         GridBagConstraints constraints1 = new GridBagConstraints();
         constraints1.fill = GridBagConstraints.HORIZONTAL;
         constraints1.weightx = 1;
-        // constraints1.anchor = GridBagConstraints.LINE_START;
         constraints1.insets = new Insets(5, 0, 5, 10);
-        // constraints1.gridwidth = 1;
 
         constraints1.gridy = 0;
         constraints1.gridx = 0;
@@ -245,12 +263,11 @@ public class ShoppingGUI extends JFrame {
         constraints.gridy++;
         add(panel, constraints);
 
-        constraints.gridwidth = 1;
+        constraints.gridwidth = 0;
 
-        constraints.anchor = GridBagConstraints.LAST_LINE_END;
-        constraints.insets = new Insets(10, 10, 10, 175);
-        constraints.gridwidth = 2;
-        constraints.gridx = 1;
+        constraints.fill = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(10, 20, 10, 20);
+        constraints.weightx = 2;
         constraints.gridy++;
         add(addToShoppingCart, constraints);
 
@@ -284,7 +301,7 @@ public class ShoppingGUI extends JFrame {
             data[i][0] = product.getProductId();
             data[i][1] = product.getProductName();
             data[i][2] = product.getClass().getName();
-            data[i][3] = product.getPrice();
+            data[i][3] = product.getPrice() + "0 £";
             if (product instanceof Electronics) {
                 data[i][4] = ((Electronics) product).getInfo();
             } else if (product instanceof Clothing) {
