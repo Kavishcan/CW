@@ -21,15 +21,11 @@ public class ShoppingGUI extends JFrame {
 
     public ShoppingGUI(User user) {
         setTitle("Westminster Shopping");
-
         setLayout(new GridBagLayout());
         initComponents();
         layoutGUI(user);
         setVisible(true);
-
         setSize(800, 800);
-
-
         pack();
         setLocationRelativeTo(null);
     }
@@ -52,10 +48,14 @@ public class ShoppingGUI extends JFrame {
         cartSpeical1 = new JLabel("Special 1");
         cartSpecial2 = new JLabel("Special 2");
         cartQty = new JLabel("Quantity");
-        addToShoppingCart = createButton("Add to Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
-        viewShoppingCart = createButton("View Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
-        sortButton = createButton("Sort", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
-        logOutButton = createButton("Log Out", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(colour1));
+        addToShoppingCart = createButton("Add to Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE,
+                colour1, new LineBorder(colour1));
+        viewShoppingCart = createButton("View Shopping Cart", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE,
+                colour1, new LineBorder(colour1));
+        sortButton = createButton("Sort", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1,
+                new LineBorder(colour1));
+        logOutButton = createButton("Log Out", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1,
+                new LineBorder(colour1));
         productComboBox = new JComboBox<>(new String[] { "All", "Electronics", "Clothing" });
 
         String[] columnNames = { "Product Id", "Name", "Category", "Price(£)", "Info" };
@@ -84,16 +84,6 @@ public class ShoppingGUI extends JFrame {
 
         scrollPane = new JScrollPane(productsTable);
         scrollPane.setPreferredSize(new Dimension(800, 300));
-    }
-
-    // method to style a button
-    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
-        JButton button = new JButton(text);
-        button.setFont(font);
-        button.setForeground(foreground);
-        button.setBackground(background);
-        button.setBorder(border);
-        return button;
     }
 
     public void layoutGUI(User user) {
@@ -161,7 +151,7 @@ public class ShoppingGUI extends JFrame {
         productsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
+                    boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 String productId = (String) table.getValueAt(row, 0);
                 Product product = WestminsterShoppingManager.getProduct(productId);
@@ -229,10 +219,6 @@ public class ShoppingGUI extends JFrame {
                 }
             }
         });
-
-
-
-
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -309,5 +295,15 @@ public class ShoppingGUI extends JFrame {
             }
         }
         return data;
+    }
+
+    // method to style a button
+    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setForeground(foreground);
+        button.setBackground(background);
+        button.setBorder(border);
+        return button;
     }
 }

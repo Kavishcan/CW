@@ -218,16 +218,9 @@ public class WestminsterShoppingManager implements ShoppingManager {
                     case 2:
                         String productIdToDelete = "";
 
-                        while (true) {
-                            try {
-                                System.out.print("\nEnter the product ID to delete: ");
-                                productIdToDelete = scanner.nextLine();
-                                break;
-                            } catch (InputMismatchException e) {
-                                System.out.println("Invalid input. Please enter a valid product ID:");
-                                scanner.nextLine(); // clear the scanner
-                            }
-                        }
+                        System.out.print("\nEnter the product ID to delete: ");
+                        productIdToDelete = scanner.nextLine();
+
                         removeProduct(productIdToDelete);
                         break;
                     case 3:
@@ -237,16 +230,8 @@ public class WestminsterShoppingManager implements ShoppingManager {
                         String productIdToUpdate = "";
                         int newQty = 0;
 
-                        while (true) {
-                            try {
-                                System.out.print("\nEnter the product ID to update: ");
-                                productIdToUpdate = scanner.nextLine();
-                                break;
-                            } catch (InputMismatchException e) {
-                                System.out.println("Invalid input. Please enter a valid product ID to update:");
-                                scanner.nextLine(); // clear the scanner
-                            }
-                        }
+                        System.out.print("\nEnter the product ID to update: ");
+                        productIdToUpdate = scanner.nextLine();
 
                         while (true) {
                             try {
@@ -458,4 +443,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         }
     }
 
+    public void removeAllProducts() {
+        productList.clear();
+    }
 }

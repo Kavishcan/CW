@@ -17,6 +17,8 @@ class WestminsterShoppingManagerTest {
     void setUp() {
         // Initialize the WestminsterShoppingManager instance
         westminsterShoppingManager = new WestminsterShoppingManager();
+        westminsterShoppingManager.removeAllProducts();
+
     }
 
     @Test
@@ -94,6 +96,39 @@ class WestminsterShoppingManagerTest {
 
         // Assert that the quantity of the product in the productList of the WestminsterShoppingManager is updated correctly
         assertEquals(20, WestminsterShoppingManager.getProduct(product.getProductId()).getProductQty());
+    }
+
+    @Test
+    void testSaveToFile() {
+        // Create a new product
+        Product product = new Electronics("E001", "Test Product", 10, 100.0, "Test Brand", 12);
+
+        // Add the product to the WestminsterShoppingManager
+        westminsterShoppingManager.addProduct(product);
+
+        // Save the products to a file
+        westminsterShoppingManager.saveToFile();
+
+        // Assert that the file is created
+        assertTrue(Files.exists(Paths.get("products.txt")));
+    }
+
+    @Test
+    void testLoadFromFile() {
+        // Create a new product
+        Product product = new Electronics("E001", "Test Product", 10, 100.0, "Test Brand", 12);
+
+        // Add the product to the WestminsterShoppingManager
+        westminsterShoppingManager.addProduct(product);
+
+        // Save the products to a file
+        westminsterShoppingManager.saveToFile();
+
+        // Load the products from the file
+        westminsterShoppingManager.loadFromFile();
+
+        // Assert that the product is in the productList of the WestminsterShoppingManager
+        assertNotNull(WestminsterShoppingManager.getProduct(product.getProductId()));
     }
 
     @Test

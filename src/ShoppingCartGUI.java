@@ -47,7 +47,6 @@ public class ShoppingCartGUI extends JFrame {
         finalTotalLabel.setFont(new Font("Roboto Mono", Font.BOLD, 14));
 
         checkoutButton = createButton("Checkout", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(buttonBgColor));
-
         removeButton = createButton("Remove", new Font("Roboto Mono", Font.PLAIN, 18), Color.WHITE, colour1, new LineBorder(buttonBgColor));
 
         String[] columnNames = { "Product", "Quantity", "Price(£)" };
@@ -57,7 +56,6 @@ public class ShoppingCartGUI extends JFrame {
                 return false;
             }
         };
-
 
         productsTable = new JTable(model);
         productsTable.setFont(new Font("Roboto Mono", Font.PLAIN, 14));
@@ -80,7 +78,7 @@ public class ShoppingCartGUI extends JFrame {
             }
         };
 
-        // Replace 'columnIndex' with the index of the column you want to center align
+        // Replace 'columnIndex' with the index of the column to center align
         productsTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         productsTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         productsTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
@@ -91,16 +89,6 @@ public class ShoppingCartGUI extends JFrame {
 
         productsTable.setModel(model);
     }
-
-    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
-        JButton button = new JButton(text);
-        button.setFont(font);
-        button.setForeground(foreground);
-        button.setBackground(background);
-        button.setBorder(border);
-        return button;
-    }
-
 
     public void layoutGUI(User user) {
         GridBagConstraints constraints = new GridBagConstraints();
@@ -213,6 +201,15 @@ public class ShoppingCartGUI extends JFrame {
         discount1Label.setText("First Purchase Discount(10%):   - " + user.getShoppingCart().firstPurchaseDiscount(user) + "  £");
         discount2Label.setText("Three items in same category Discount(20%):  - " + user.getShoppingCart().categoryDiscount() + "  £");
         finalTotalLabel.setText("Final Total:   " + (user.getShoppingCart().calculateTotalCost() - user.getShoppingCart().firstPurchaseDiscount(user) - user.getShoppingCart().categoryDiscount()) + "  £");
+    }
+
+    private JButton createButton(String text, Font font, Color foreground, Color background, Border border) {
+        JButton button = new JButton(text);
+        button.setFont(font);
+        button.setForeground(foreground);
+        button.setBackground(background);
+        button.setBorder(border);
+        return button;
     }
 
 }
