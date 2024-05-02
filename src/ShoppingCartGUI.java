@@ -78,7 +78,7 @@ public class ShoppingCartGUI extends JFrame {
             }
         };
 
-        // Replace 'columnIndex' with the index of the column to center align
+        // Replace 'columnIndex' with the index of the column to center align`
         productsTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         productsTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         productsTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);

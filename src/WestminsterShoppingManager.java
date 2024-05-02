@@ -14,7 +14,7 @@ public class WestminsterShoppingManager implements ShoppingManager {
         WestminsterShoppingManager.productList = new ArrayList<>();
         WestminsterShoppingManager.userList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
-         loadUsersFromFile();
+        loadUsersFromFile();
         loadFromFile();
     }
 
